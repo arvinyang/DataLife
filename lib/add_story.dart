@@ -1,25 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:photo/photo.dart';
 import 'package:photo_manager/photo_manager.dart';
-import "file_pperation.dart";
 import 'dart:convert';
-import "dart:io";
+import 'dart:io';
+import 'file_pperation.dart';
 
-class MyPhotoPageState extends StatefulWidget {
+class AddStorty extends StatefulWidget {
   String _title;
-  
-  MyPhotoPageState(this._title);
+  AddStorty(this._title);
   @override
-  _MyPhotoPageState createState() => _MyPhotoPageState();
+  _AddStorty createState() => _AddStorty();
 }
 
-class _MyPhotoPageState extends State<MyPhotoPageState> with LoadingDelegate {
-  String currentSelected = "";
-  String photoTitle = 'my photo';
+class _AddStorty extends State<AddStorty> with LoadingDelegate {
   var results = "";
   FileOperation myfile = new FileOperation();
   final TextEditingController controller = new TextEditingController();
+  String currentSelected = "";
+  String photoTitle = 'my photo';
+  List<String> selectedPhoto = [];
   @override
   void initState() {
     super.initState();
@@ -28,6 +28,20 @@ class _MyPhotoPageState extends State<MyPhotoPageState> with LoadingDelegate {
         results = value;
       });
     });
+  }
+  
+  @override
+  Widget buildPreviewLoading(
+      BuildContext context, AssetEntity entity, Color themeColor) {
+    return Center(
+      child: Container(
+        width: 50.0,
+        height: 50.0,
+        child: CupertinoActivityIndicator(
+          radius: 25.0,
+        ),
+      ),
+    );
   }
   @override
   Widget buildBigImageLoading(
@@ -42,23 +56,58 @@ class _MyPhotoPageState extends State<MyPhotoPageState> with LoadingDelegate {
       ),
     );
   }
-
-  @override
-  Widget buildPreviewLoading(
-      BuildContext context, AssetEntity entity, Color themeColor) {
-    return Center(
-      child: Container(
-        width: 50.0,
-        height: 50.0,
-        child: CupertinoActivityIndicator(
-          radius: 25.0,
-        ),
-      ),
-    );
-  }
-  
   @override
   Widget build(BuildContext context) {
+    readAll();
+    Future<dynamic>.delayed(Duration(milliseconds: 200));
+    Widget titleSection = Container(
+      padding: const EdgeInsets.all(32),
+      child: Row(
+        children: [
+          Expanded(
+            /*1*/
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*2*/
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'Oeschinen Lake Campground',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  'Kandersteg, Switzerland',
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          /*3*/
+          Icon(
+            Icons.star,
+            color: Colors.red[500],
+          ),
+          Text('41'),
+        ],
+      ),
+    );
+    Color color = Theme.of(context).primaryColor;
+    Widget buttonSection = Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildButtonColumn(color, Icons.call, 'CALL'),
+          _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
+          _buildButtonColumn(color, Icons.share, 'SHARE'),
+        ],
+      ),
+    );
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
       child: new Center(
@@ -83,23 +132,57 @@ class _MyPhotoPageState extends State<MyPhotoPageState> with LoadingDelegate {
         ),
       ),
     );
-    return new Scaffold(
-       //appBar: AppBar(title: Text(widget._title),), 
-      body: Container(
-          child: Column(
-            children: <Widget>[
-              new  Container(
-                
-              ),
-              textSection,
-            ],
-        ),
+    return Scaffold(
+      appBar: AppBar(title: Text(widget._title),),
+      body: ListView(
+        children: [
+          //Icon(AssetImage("assets/images/addPhoto.jpg")),
+          new IconButton(
+                  icon: Icon(Icons.home),
+                  color: Colors.blueAccent,
+                  onPressed: () => _pickImage(PickType.onlyImage)),
+          (selectedPhoto.length > 0)
+          ? new ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                print("itemBuilder::::::::::::::::::::::::::::::::::::::$selectedPhoto.length");
+                return new Image.file(
+                      File(selectedPhoto[index]),
+                      width: 100,
+                      height: 100,
+                    );
+              },
+              itemCount: selectedPhoto.length,
+            )
+            : new Text("no select item"),
+          new Text(currentSelected),
+          textSection,
+        ],
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: () => _pickAsset(PickType.all),
+        onPressed: () => null,
         tooltip: 'pickImage',
         child: new Icon(Icons.navigate_next),
       ),
+    );
+  }
+  Column _buildButtonColumn(Color color, IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color),
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: color,
+            ),
+          ),
+        ),
+      ],
     );
   }
   Future<String> readAll() async {
@@ -108,12 +191,7 @@ class _MyPhotoPageState extends State<MyPhotoPageState> with LoadingDelegate {
     print('readAll:$results');
   // Do something with version
   }
-  void _testPhotoListParams() async {
-    var assetPathList = await PhotoManager.getImageAsset();
-    _pickAsset(PickType.all, pathList: assetPathList);
-  }
-
-void ickImage(PickType type, {List<AssetPathEntity> pathList}) async {
+  void _pickImage(PickType type, {List<AssetPathEntity> pathList}) async {
     List<AssetEntity> imgList = await PhotoPicker.pickAsset(
       // BuildContext required
       context: context,
@@ -160,94 +238,15 @@ void ickImage(PickType type, {List<AssetPathEntity> pathList}) async {
     );
 
     if (imgList == null) {
-      currentSelected = "not select item";
+      currentSelected = "no select item";
     } else {
-      List<String> r = [];
+      selectedPhoto = [];
       for (var e in imgList) {
         var file = await e.file;
-        r.add(file.absolute.path);
+        selectedPhoto.add(file.absolute.path);
       }
-      currentSelected = r.join("\n\n");
+      currentSelected = selectedPhoto.join("\n\n");
     }
-    //setState(() {});
-  }
-  void _pickAsset(PickType type, {List<AssetPathEntity> pathList}) async {
-    List<AssetEntity> imgList = await PhotoPicker.pickAsset(
-      // BuildContext required
-      context: context,
-      /// The following are optional parameters.
-      themeColor: Colors.lightBlue,
-      // the title color and bottom color
-      padding: 0.20,
-      // item padding
-      dividerColor: Colors.grey,
-      // divider color
-      disableColor: Colors.grey.shade300,
-      // the check box disable color
-      itemRadio: 0.88,
-      // the content item radio
-      maxSelected: 9,
-      // max picker image count
-      // provider: I18nProvider.english,
-      provider: I18nProvider.chinese,
-      // i18n provider ,default is chinese. , you can custom I18nProvider or use ENProvider()
-      rowCount: 3,
-      // item row count
-      textColor: Colors.white,
-      // text color
-      thumbSize: 500,
-      // preview thumb size , default is 64
-      sortDelegate: SortDelegate.common,
-      // default is common ,or you make custom delegate to sort your gallery
-      checkBoxBuilderDelegate: DefaultCheckBoxBuilderDelegate(
-        activeColor: Colors.white,
-        unselectedColor: Colors.white,
-      ),
-      // default is DefaultCheckBoxBuilderDelegate ,or you make custom delegate to create checkbox
-
-      loadingDelegate: this,
-      // if you want to build custom loading widget,extends LoadingDelegate, [see example/lib/main.dart]
-
-      badgeDelegate: const DurationBadgeDelegate(),
-      // badgeDelegate to show badge widget
-
-      pickType: type,
-
-      photoPathList: pathList,
-    );
-
-    if (imgList == null) {
-      currentSelected = "not select item";
-    } else {
-      List<String> r = [];
-      for (var e in imgList) {
-        var file = await e.file;
-        r.add(file.absolute.path);
-      }
-      currentSelected = r.join("\n\n");
-    }
-    //setState(() {});
-  }
-}
-
-class IconTextButton extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Function onTap;
-
-  const IconTextButton({Key key, this.icon, this.text, this.onTap})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        child: ListTile(
-          leading: Icon(icon ?? Icons.device_unknown),
-          title: Text(text ?? ""),
-        ),
-      ),
-    );
+    setState(() {});
   }
 }

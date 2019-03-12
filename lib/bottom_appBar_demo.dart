@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'each_view.dart';
 import 'insta_body.dart';
-import 'photo_page.dart';
+import 'add_story.dart';
 
 class BottomAppBarDemo extends StatefulWidget {
   @override
@@ -31,7 +31,7 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push<dynamic>(MaterialPageRoute<dynamic>(builder: (BuildContext context){
-            return EachView('Add a New');
+            return AddStorty('Add a New Story');
           }));
         },
         tooltip: 'Increment',
