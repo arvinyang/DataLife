@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:BOPhotoNote/insta_stories.dart';
+import 'file_pperation.dart';
 
 class InstaList extends StatelessWidget {
+  FileOperation myfile = new FileOperation();
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
@@ -40,7 +42,7 @@ class InstaList extends StatelessWidget {
                             width: 10.0,
                           ),
                           new Text(
-                            "imthpk",
+                            "this is a story",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           )
                         ],

@@ -85,8 +85,8 @@ class _EachViewState extends State<StortyDetail> {
               onSubmitted: (String str) {
                 var now = new DateTime.now();
                 String timeStr = now.toString();
-                results = results + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
-                myfile.writeToLocalFile(json.encode(results));
+                //results = results + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
+                //myfile.writeToLocalFile(json.encode(results));
                 setState(() {
                   controller.text = "";
                 });

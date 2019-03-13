@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'each_view.dart';
 import 'insta_body.dart';
 import 'add_story.dart';
+import 'file_pperation.dart';
 
 class BottomAppBarDemo extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
   int _index = 0;
   bool triedSilentLogin = false;
   bool setupNotifications = false;
+  FileOperation myfile = new FileOperation();
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +75,15 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
     _eachView = List();
     _eachView..add(EachView('home'))..add(EachView('me'));
     pageController = new PageController();
+    readAll();
   }
 
   @override
   void dispose() {
     super.dispose();
     pageController.dispose();
+  }
+  Future<String> readAll() async {
+    await myfile.readFromLocalFile();
   }
 }

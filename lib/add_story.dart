@@ -58,7 +58,6 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   }
   @override
   Widget build(BuildContext context) {
-    readAll();
     Future<dynamic>.delayed(Duration(milliseconds: 200));
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
@@ -119,15 +118,19 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
               onSubmitted: (String str) {
                 var now = new DateTime.now();
                 String timeStr = now.toString();
-                results = results + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
-                myfile.writeToLocalFile(json.encode(results));
+                //results = results + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
+                //String outStr = noteGenerater() + "feeling"+ ":" + results + "," + "imagePath"+ ":" +currentSelected;
+                FileOperation.noteData.imagePath.clear();
+                selectedPhoto.forEach(FileOperation.noteData.imagePath.add);
+                FileOperation.noteData.feeling = FileOperation.noteData.feeling + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
+                myfile.writeToLocalFile(FileOperation.noteData);
                 setState(() {
                   controller.text = "";
                 });
               },
               controller: controller,
             ),
-            new Text(results),
+            new Text(FileOperation.noteData.imagePath.toString() + FileOperation.noteData.feeling),
           ],
         ),
       ),
@@ -142,16 +145,10 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
                   color: Colors.blueAccent,
                   onPressed: () => _pickImage(PickType.onlyImage)),
           (selectedPhoto.length > 0)
-          ? new ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                print("itemBuilder::::::::::::::::::::::::::::::::::::::$selectedPhoto.length");
-                return new Image.file(
-                      File(selectedPhoto[index]),
-                      width: 100,
-                      height: 100,
-                    );
-              },
-              itemCount: selectedPhoto.length,
+          ? Image.file(
+              File(selectedPhoto[0]),
+              width: 100,
+              height: 100,
             )
             : new Text("no select item"),
           new Text(currentSelected),
@@ -160,8 +157,8 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () => null,
-        tooltip: 'pickImage',
-        child: new Icon(Icons.navigate_next),
+        tooltip: 'save',
+        child: new Icon(Icons.save),
       ),
     );
   }
@@ -186,10 +183,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
     );
   }
   Future<String> readAll() async {
-    results = json.decode(await myfile.readFromLocalFile());
-    return results;
-    print('readAll:$results');
-  // Do something with version
+    await myfile.readFromLocalFile();
   }
   void _pickImage(PickType type, {List<AssetPathEntity> pathList}) async {
     List<AssetEntity> imgList = await PhotoPicker.pickAsset(
@@ -248,5 +242,14 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       currentSelected = selectedPhoto.join("\n\n");
     }
     setState(() {});
+  }
+  String noteGenerater(){
+    String tmpStr;
+    tmpStr = "noteID" + ":" + "019983874" + ','
+    + "date" + ":" + "2019-03-12 09:30:12" + ','
+    + "weather" + ":" + " " + ","
+    + "temperature" + ":" + " " + ","
+    + "place" + ":" + "成都市高新区益州大道" + ',';
+    return tmpStr;
   }
 }

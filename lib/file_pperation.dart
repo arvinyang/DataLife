@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
   
 
@@ -10,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
     factory FileOperation() =>_getInstance();
     static FileOperation get instance => _getInstance();
     static FileOperation _instance;
+    static NoteData noteData = new NoteData(' ',' ',' ',' ',' ',' ',[' ']);
     FileOperation._internal() {
     // 初始化
     //filePath = (await getApplicationDocumentsDirectory()).path;
@@ -34,16 +36,87 @@ import 'package:path_provider/path_provider.dart';
         File file = await getLocalFile();
         // read the variable as a string from the file.
         String contents = await file.readAsString();
+        print("contents:$contents");
+        if(contents.length > 0){
+          Map userMap = json.decode(contents);
+          noteData = new NoteData.fromJson(userMap);
+        }
         return contents;
       } on FileSystemException {
         return "";
       }
     }
 
-    Future<Null> writeToLocalFile(String str) async {
+    Future<Null> writeToLocalFile(NoteData tmpNoteData) async {
       // write the variable as a string to the file
-      await (await getLocalFile()).writeAsString(str);
+      String jsonStr = json.encode(tmpNoteData);
+      print("writeToLocalFile:$jsonStr");
+      await (await getLocalFile()).writeAsString(jsonStr);
     }
 
   }
   
+  class NoteData 
+  {
+    String noteID;
+    String date;
+    String feeling;
+    String weather;
+    String temperature;
+    String place;
+    List<String> imagePath = [''];
+    //final List<NoteComment> noteComment;
+
+    NoteData(this.noteID, this.date, this.feeling, this.weather, this.temperature, this.place, this.imagePath);
+    //NoteData(this.noteID, this.date, this.feeling, this.weather, this.temperature, this.place, this.imagePath, this.noteComment);
+
+    NoteData.fromJson(Map<String, dynamic> jsonMap)
+    {
+        noteID = jsonMap['noteID'];
+        date = jsonMap['date'];
+        feeling = jsonMap['feeling'];
+        weather = jsonMap['weather'];
+        temperature = jsonMap['temperature'];
+        place = jsonMap['place'];
+        jsonMap['imagePath'].forEach(imagePath.add);
+        //noteComment = jsonMap['noteComment'];
+    }
+          
+          //
+
+    Map<String, dynamic> toJson()
+    {
+      Map<String, dynamic> tmpMap = new Map<String, dynamic>();
+      tmpMap['noteID']= noteID;
+      tmpMap['date']= date;
+      tmpMap['feeling']= feeling;
+      tmpMap['weather']= weather;
+      tmpMap['temperature']= temperature;
+      tmpMap['place']= place;
+      tmpMap['imagePath']= imagePath;
+      return tmpMap;
+    }
+}
+
+class NoteComment 
+  {
+    final String name;
+    final String date;
+    final String feeling;
+
+    NoteComment(this.name, this.date, this.feeling);
+
+    NoteComment.fromJson(Map<String, dynamic> jsonMap)
+        : name = jsonMap['name'],
+          date = jsonMap['date'],
+          feeling = jsonMap['feeling'];
+
+    Map<String, dynamic> toJson()
+    {
+      Map<String, dynamic> tmpMap = new Map<String, dynamic>();
+      tmpMap['name']= name;
+      tmpMap['date']= date;
+      tmpMap['feeling']= feeling;
+      return tmpMap;
+    }
+}
