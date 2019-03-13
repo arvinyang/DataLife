@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
     static FileOperation get instance => _getInstance();
     static FileOperation _instance;
     static NoteData noteData = new NoteData(' ',' ',' ',' ',' ',' ',[' ']);
+    bool readFlag = true;
     FileOperation._internal() {
     // 初始化
     //filePath = (await getApplicationDocumentsDirectory()).path;
@@ -32,17 +33,23 @@ import 'package:path_provider/path_provider.dart';
     }
 
     Future<String> readFromLocalFile() async {
-      try {
-        File file = await getLocalFile();
-        // read the variable as a string from the file.
-        String contents = await file.readAsString();
-        print("contents:$contents");
-        if(contents.length > 0){
-          Map userMap = json.decode(contents);
-          noteData = new NoteData.fromJson(userMap);
+      if(readFlag){
+        try {
+          File file = await getLocalFile();
+          // read the variable as a string from the file.
+          String contents = await file.readAsString();
+          print("contents:$contents");
+          if(contents.length > 0){
+            Map userMap = json.decode(contents);
+            noteData = new NoteData.fromJson(userMap);
+          }
+          readFlag = false;
+          return contents;
+        } on FileSystemException {
+          return "";
         }
-        return contents;
-      } on FileSystemException {
+      }
+      else{
         return "";
       }
     }
@@ -52,6 +59,7 @@ import 'package:path_provider/path_provider.dart';
       String jsonStr = json.encode(tmpNoteData);
       print("writeToLocalFile:$jsonStr");
       await (await getLocalFile()).writeAsString(jsonStr);
+      //readFlag = true;
     }
 
   }
