@@ -14,8 +14,8 @@ class AddStorty extends StatefulWidget {
 }
 
 class _AddStorty extends State<AddStorty> with LoadingDelegate {
-  var results = "";
-  FileOperation myfile = new FileOperation();
+  String storyFeeling = "";
+  FileOperation myfile;
   final TextEditingController controller = new TextEditingController();
   String currentSelected = "";
   String photoTitle = 'my photo';
@@ -23,16 +23,14 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   @override
   void initState() {
     super.initState();
-    readAll().then((String value) {
-      setState(() {
-        results = value;
-      });
+    myfile = new FileOperation();
+    setState(() {
     });
   }
   
   @override
   Widget buildPreviewLoading(
-      BuildContext context, AssetEntity entity, Color themeColor) {
+    BuildContext context, AssetEntity entity, Color themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -58,90 +56,43 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   }
   @override
   Widget build(BuildContext context) {
-    Future<dynamic>.delayed(Duration(milliseconds: 200));
-    Widget titleSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Row(
-        children: [
-          Expanded(
-            /*1*/
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*2*/
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    'Oeschinen Lake Campground',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Kandersteg, Switzerland',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          Text('41'),
-        ],
-      ),
-    );
-    Color color = Theme.of(context).primaryColor;
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButtonColumn(color, Icons.call, 'CALL'),
-          _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
-          _buildButtonColumn(color, Icons.share, 'SHARE'),
-        ],
-      ),
-    );
-    Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: new Center(
-        child: new Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            new TextField(
-              decoration: new InputDecoration(hintText: "Say Something..."),
-              onSubmitted: (String str) {
-                var now = new DateTime.now();
-                String timeStr = now.toString();
-                //results = results + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
-                //String outStr = noteGenerater() + "feeling"+ ":" + results + "," + "imagePath"+ ":" +currentSelected;
-                FileOperation.noteData.imagePath.clear();
-                selectedPhoto.forEach(FileOperation.noteData.imagePath.add);
-                FileOperation.noteData.feeling = FileOperation.noteData.feeling + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
-                myfile.writeToLocalFile(FileOperation.noteData);
-                setState(() {
-                  controller.text = "";
-                });
-              },
-              controller: controller,
-            ),
-            new Text(FileOperation.noteData.imagePath.toString() + FileOperation.noteData.feeling),
-          ],
-        ),
-      ),
-    );
+    final controller = TextEditingController();
+    Widget buildTextField() {
+      return TextField(
+        controller: controller,
+        maxLength: 2000,
+        maxLines: 12,
+        autofocus: true,
+        obscureText: false,
+        textAlign: TextAlign.left,
+        style: TextStyle(fontSize: 14.0, color: Colors.black87),
+        scrollPadding: const EdgeInsets.all(10.0),
+        onChanged: (text) {
+          //print('change $text');
+          storyFeeling = text;
+        },
+        onSubmitted: (text) {
+          //print('submit $text');
+        },
+        enabled: true,
+        decoration: InputDecoration(
+          hintText: "Say Something...",
+          //icon: Icon(Icons.flare),
+          contentPadding: EdgeInsets.all(15.0),
+          border: OutlineInputBorder(
+            gapPadding: 10.0,
+            borderRadius: BorderRadius.circular(20.0),
+            borderSide: BorderSide(color: Colors.cyan, width: 1.0, style: BorderStyle.none)
+          )),
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: Text(widget._title),),
       body: ListView(
         children: [
           //Icon(AssetImage("assets/images/addPhoto.jpg")),
           new IconButton(
-                  icon: Icon(Icons.home),
+                  icon: Icon(Icons.add_a_photo),
                   color: Colors.blueAccent,
                   onPressed: () => _pickImage(PickType.onlyImage)),
           (selectedPhoto.length > 0)
@@ -150,17 +101,27 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
               width: 100,
               height: 100,
             )
-            : new Text("no select item"),
-          new Text(currentSelected),
-          textSection,
+            : new Text("tap to add a photo..."),
+          //new Text(currentSelected),
+          buildTextField(),
         ],
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: () => null,
+        onPressed: () => _saveStory(),
         tooltip: 'save',
         child: new Icon(Icons.save),
       ),
     );
+  }
+  void _saveStory()
+  {
+    var now = new DateTime.now();
+    String timeStr = now.toString();
+    String feeling = timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + storyFeeling;
+    NoteData newStory = new NoteData(timeStr,timeStr,feeling,' ',' ',' ',selectedPhoto);
+    FileOperation.noteDataList.noteList.add(newStory);
+    FileOperation.noteDataList.noteNum++;
+    myfile.writeToLocalFile();
   }
   Column _buildButtonColumn(Color color, IconData icon, String label) {
     return Column(
@@ -181,9 +142,6 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
         ),
       ],
     );
-  }
-  Future<String> readAll() async {
-    await myfile.readFromLocalFile();
   }
   void _pickImage(PickType type, {List<AssetPathEntity> pathList}) async {
     List<AssetEntity> imgList = await PhotoPicker.pickAsset(

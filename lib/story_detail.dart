@@ -25,7 +25,7 @@ class _EachViewState extends State<StortyDetail> {
   @override
   Widget build(BuildContext context) {
     readAll();
-    Future<dynamic>.delayed(Duration(milliseconds: 200));
+    //Future<dynamic>.delayed(Duration(milliseconds: 200));
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
@@ -136,9 +136,9 @@ class _EachViewState extends State<StortyDetail> {
     );
   }
   Future<String> readAll() async {
-    results = json.decode(await myfile.readFromLocalFile());
-    return results;
-    print('readAll:$results');
+    //results = json.decode(await myfile.readFromLocalFile());
+    //return results;
+    //print('readAll:$results');
   // Do something with version
   }
 }

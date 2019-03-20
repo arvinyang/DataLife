@@ -12,21 +12,16 @@ class EachView extends StatefulWidget {
 
 class _EachViewState extends State<EachView> {
   var results = "";
-  FileOperation myfile = new FileOperation();
   final TextEditingController controller = new TextEditingController();
   @override
   void initState() {
     super.initState();
-    readAll().then((String value) {
-      setState(() {
-        results = value;
+    setState(() {
       });
-    });
   }
   @override
   Widget build(BuildContext context) {
-    readAll();
-    Future<dynamic>.delayed(Duration(milliseconds: 200));
+    //Future<dynamic>.delayed(Duration(milliseconds: 200));
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
@@ -86,8 +81,6 @@ class _EachViewState extends State<EachView> {
               onSubmitted: (String str) {
                 var now = new DateTime.now();
                 String timeStr = now.toString();
-                //results = results + "\n" + timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + str;
-                //myfile.writeToLocalFile(json.encode(results));
                 setState(() {
                   controller.text = "";
                 });
@@ -136,11 +129,5 @@ class _EachViewState extends State<EachView> {
         ),
       ],
     );
-  }
-  Future<String> readAll() async {
-    results = json.decode(await myfile.readFromLocalFile());
-    return results;
-    print('readAll:$results');
-  // Do something with version
   }
 }

@@ -7,15 +7,22 @@ import 'package:path_provider/path_provider.dart';
   class FileOperation
   {
     final String fileName = 'noteData.json';
+    final String fileNameList = 'noteDataList.json';
     String filePath;
     factory FileOperation() =>_getInstance();
     static FileOperation get instance => _getInstance();
     static FileOperation _instance;
-    static NoteData noteData = new NoteData(' ',' ',' ',' ',' ',' ',[' ']);
+    static NoteData noteData;
+    static NoteDataList noteDataList;
+    File localFile;
     bool readFlag = true;
+
     FileOperation._internal() {
     // 初始化
     //filePath = (await getApplicationDocumentsDirectory()).path;
+    //noteDataList = new NoteDataList(0, []);
+    //noteData = new NoteData(' ',' ',' ',' ',' ',' ',[' ']);
+    //readFromLocalFileList();
     }
     static FileOperation _getInstance() {
       _instance ??= new FileOperation._internal();
@@ -23,25 +30,26 @@ import 'package:path_provider/path_provider.dart';
     }
     Future<File> getLocalFile() async {
       // get the path to the document directory.
-      String dir = (await getApplicationDocumentsDirectory()).path;
-      String tempPath = (await getTemporaryDirectory()).path;
       String appDocPath = (await getApplicationDocumentsDirectory()).path;
-
-      print('临时目录: ' + tempPath);
-      print('文档目录: ' + appDocPath);
-      return new File('$appDocPath/$fileName');
+      try{
+        localFile = new File('$appDocPath/$fileNameList');
+      }
+      on FileSystemException {
+          localFile = null;
+      }
+      return localFile;
     }
 
     Future<String> readFromLocalFile() async {
       if(readFlag){
         try {
-          File file = await getLocalFile();
+          File file = File((await getApplicationDocumentsDirectory()).path + '/' + fileNameList);
           // read the variable as a string from the file.
           String contents = await file.readAsString();
-          print("contents:$contents");
           if(contents.length > 0){
             Map userMap = json.decode(contents);
-            noteData = new NoteData.fromJson(userMap);
+            noteDataList = new NoteDataList.fromJson(userMap);
+            noteDataList.noteNum = noteDataList.noteList.length;
           }
           readFlag = false;
           return contents;
@@ -54,14 +62,23 @@ import 'package:path_provider/path_provider.dart';
       }
     }
 
-    Future<Null> writeToLocalFile(NoteData tmpNoteData) async {
+    Future<Null> writeToLocalFile() async {
       // write the variable as a string to the file
-      String jsonStr = json.encode(tmpNoteData);
-      print("writeToLocalFile:$jsonStr");
-      await (await getLocalFile()).writeAsString(jsonStr);
-      //readFlag = true;
+      if(noteDataList.noteList.length > 0){
+        String jsonStrList = json.encode(noteDataList);
+        try{
+          localFile.writeAsString(jsonStrList);
+          
+        }
+        on FileSystemException {
+            getLocalFile();
+            //read again, write again;
+            if(localFile != null){
+              localFile.writeAsString(jsonStrList);
+            }
+        }
+      }
     }
-
   }
   
   class NoteData 
@@ -128,3 +145,44 @@ class NoteComment
       return tmpMap;
     }
 }
+
+class NoteDataList 
+  {
+    int noteNum;
+    List<NoteData> noteList =new List();
+    //final List<NoteComment> noteComment;
+
+    NoteDataList(int numb ,List<NoteData> dataList){
+      noteNum = numb;
+      if(dataList.length > 0){
+        dataList.every(noteList.add);
+      }
+        
+    }
+    //NoteData(this.noteID, this.date, this.feeling, this.weather, this.temperature, this.place, this.imagePath, this.noteComment);
+
+    NoteDataList.fromJson(Map<String, dynamic> jsonMap)
+    {
+        noteNum = jsonMap['noteNum'];
+        NoteData tmp = new NoteData('','','','','','',[]);
+        for (var item in jsonMap['noteList']){
+          _copyToList(item);
+        }
+
+    }
+    void _copyToList(Map<String, dynamic> jsonMap)
+    {
+        NoteData tmp;// = new NoteData('','','','','','',[]);
+        tmp = NoteData.fromJson(jsonMap);
+        noteList.add(tmp);
+    }      
+          //
+
+    Map<String, dynamic> toJson()
+    {
+      Map<String, dynamic> tmpMap = new Map<String, dynamic>();
+      tmpMap['noteNum']= noteNum;
+      tmpMap['noteList']= noteList;
+      return tmpMap;
+    }
+  }
