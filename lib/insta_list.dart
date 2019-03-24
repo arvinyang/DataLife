@@ -15,6 +15,7 @@ class _InstaList extends State<InstaList> {
   FileOperation myfile;
   final AsyncMemoizer _memoizer = new AsyncMemoizer<dynamic>();
   NoteData myData;
+  String commentStr;
   String teststr;
   int cnt=0;
   @override
@@ -34,111 +35,129 @@ class _InstaList extends State<InstaList> {
     var deviceSize = MediaQuery.of(context).size;
     if(FileOperation.noteDataList != null)
     {
-      return new FutureBuilder<dynamic>(
-        future: null,
-        builder: (context, snapshot) {
-          return  ListView.builder(
-            itemCount: FileOperation.noteDataList.noteList.length + 1,
-            itemBuilder: (context, index) => index == 0
-            ? Text(
-                    "My Stories:",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ) /* new SizedBox(
-                child: new InstaStories(),
-                height: deviceSize.height * 0.15,
-              ) */
-            :new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: new Image.file(
-                    new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length -1]),
-                    fit: BoxFit.cover,                  
-                  ),
+      if(FileOperation.noteDataList.noteList.length > 0){
+        return new ListView.builder(
+          itemCount: FileOperation.noteDataList.noteList.length + 1,
+          itemBuilder: (context, index) => index == 0
+          ? Text(
+                  "My Stories:",
+                  style: TextStyle(fontSize: 16.0 ,fontWeight: FontWeight.bold),
+                ) /* new SizedBox(
+              child: new InstaStories(),
+              height: deviceSize.height * 0.15,
+            ) */
+          :new Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Flexible(
+                fit: FlexFit.loose,
+                child: new Image.file(
+                  new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length -1]),
+                  fit: BoxFit.cover,                  
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          new Icon(
-                            FontAwesomeIcons.heart,
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          new Icon(
-                            FontAwesomeIcons.comment,
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          new Icon(FontAwesomeIcons.paperPlane),
-                        ],
-                      ),
-                      new Icon(FontAwesomeIcons.bookmark)
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                  child: Text(
-                    FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].feeling,
-                    style: TextStyle(fontWeight: FontWeight.normal),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "Liked by pawankumar, pk and 528,331 others",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Container(
-                        height: 40.0,
-                        width: 40.0,
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: new DecorationImage(
-                              fit: BoxFit.fill,
-                              image: new NetworkImage(
-                                  "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        new Icon(
+                          FontAwesomeIcons.heart,
                         ),
-                      ),
-                      new SizedBox(
-                        width: 10.0,
-                      ),
-                      Expanded(
-                        child: new TextField(
-                          decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Add a comment...",
-                          ),
+                        new SizedBox(
+                          width: 16.0,
                         ),
-                      ),
-                    ],
-                  ),
+                        new Icon(
+                          FontAwesomeIcons.comment,
+                        ),
+                        new SizedBox(
+                          width: 16.0,
+                        ),
+                        new Icon(FontAwesomeIcons.paperPlane),
+                      ],
+                    ),
+                    new Icon(FontAwesomeIcons.bookmark)
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child:Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
-                )
-              ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                child: Text(
+                  FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].feeling,
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Liked by pawankumar, pk and 528,331 others",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new Container(
+                      height: 40.0,
+                      width: 40.0,
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                            fit: BoxFit.fill,
+                            image: new NetworkImage(
+                                "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
+                      ),
+                    ),
+                    new SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      child: new TextField(
+                        decoration: new InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Add a comment...",
+                        ),
+                        onChanged: (text) {
+                          //print('submit $text');
+                          commentStr = text;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child:Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
+              )
+            ],
+          ),
+        );
+      }else{
+        return new Stack(
+          children: <Widget>[
+            new Padding(
+              padding: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 35.0),
+              child: new Center(
+                child: new Icon(Icons.sentiment_dissatisfied),
+              ),
             ),
-          );
-        },
-      );
+            new Padding(
+              padding: new EdgeInsets.fromLTRB(0.0, 35.0, 0.0, 0.0),
+              child: new Center(
+                child: new Text('还没有任何日记哦....'),
+              ),
+            ),
+          ],
+        );
+      }
     }
     else{
       return new Stack(

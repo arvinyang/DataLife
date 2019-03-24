@@ -14,13 +14,13 @@ import 'package:path_provider/path_provider.dart';
     static FileOperation _instance;
     static NoteData noteData;
     static NoteDataList noteDataList;
-    File localFile;
+    static File localFile;
     bool readFlag = true;
 
     FileOperation._internal() {
     // 初始化
     //filePath = (await getApplicationDocumentsDirectory()).path;
-    //noteDataList = new NoteDataList(0, []);
+    noteDataList = new NoteDataList(0, []);
     //noteData = new NoteData(' ',' ',' ',' ',' ',' ',[' ']);
     //readFromLocalFileList();
     }
@@ -66,6 +66,9 @@ import 'package:path_provider/path_provider.dart';
       // write the variable as a string to the file
       if(noteDataList.noteList.length > 0){
         String jsonStrList = json.encode(noteDataList);
+        if(localFile == null){
+          await getLocalFile();
+        }
         try{
           localFile.writeAsString(jsonStrList);
           

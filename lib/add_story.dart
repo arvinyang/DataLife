@@ -33,10 +33,10 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
     BuildContext context, AssetEntity entity, Color themeColor) {
     return Center(
       child: Container(
-        width: 50.0,
-        height: 50.0,
+        width: 30.0,
+        height: 30.0,
         child: CupertinoActivityIndicator(
-          radius: 25.0,
+          radius: 10.0,
         ),
       ),
     );
@@ -122,6 +122,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
     FileOperation.noteDataList.noteList.add(newStory);
     FileOperation.noteDataList.noteNum++;
     myfile.writeToLocalFile();
+    Navigator.of(context).pop();
   }
   Column _buildButtonColumn(Color color, IconData icon, String label) {
     return Column(
@@ -149,13 +150,13 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       context: context,
 
       /// The following are optional parameters.
-      themeColor: Colors.green,
+      themeColor: Colors.lightBlue,
       // the title color and bottom color
       padding: 1.0,
       // item padding
       dividerColor: Colors.grey,
       // divider color
-      disableColor: Colors.grey.shade300,
+      disableColor: Colors.grey.shade600,
       // the check box disable color
       itemRadio: 0.88,
       // the content item radio
@@ -164,11 +165,11 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       // provider: I18nProvider.english,
       provider: I18nProvider.chinese,
       // i18n provider ,default is chinese. , you can custom I18nProvider or use ENProvider()
-      rowCount: 3,
+      rowCount: 4,
       // item row count
       textColor: Colors.white,
       // text color
-      thumbSize: 150,
+      thumbSize: 256,
       // preview thumb size , default is 64
       sortDelegate: SortDelegate.common,
       // default is common ,or you make custom delegate to sort your gallery
