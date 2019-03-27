@@ -54,7 +54,7 @@ class InstaHome extends StatelessWidget {
                     Icons.add_box,
                   ),
                   onPressed:(){
-                    print('ssssssssssss');
+                    debugPrint('add box in homepage');
                     //new MyPhotoPageState("my photos");
                   },
                 ),

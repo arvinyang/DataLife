@@ -59,7 +59,7 @@ class InstaStories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("1111111111111111111111111111111111111");
+    debugPrint("insta story build");
     return new Container(
       margin: const EdgeInsets.all(16.0),
       child: new Column(

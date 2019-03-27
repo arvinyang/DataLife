@@ -68,11 +68,11 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
         style: TextStyle(fontSize: 14.0, color: Colors.black87),
         scrollPadding: const EdgeInsets.all(10.0),
         onChanged: (text) {
-          //print('change $text');
+          //debugPrint('change $text');
           storyFeeling = text;
         },
         onSubmitted: (text) {
-          //print('submit $text');
+          //debugPrint('submit $text');
         },
         enabled: true,
         decoration: InputDecoration(
@@ -115,15 +115,40 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   }
   void _saveStory()
   {
+    if(selectedPhoto.isEmpty && storyFeeling.isEmpty){
+      _showAlertDialog(context);
+      return;
+    }
     var now = new DateTime.now();
     String timeStr = now.toString();
     String feeling = timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + storyFeeling;
+    selectedPhoto ??= [''];
     NoteData newStory = new NoteData(timeStr,timeStr,feeling,' ',' ',' ',selectedPhoto);
     FileOperation.noteDataList.noteList.add(newStory);
     FileOperation.noteDataList.noteNum++;
     myfile.writeToLocalFile();
     Navigator.of(context).pop();
   }
+  void _showAlertDialog(BuildContext context) {
+    NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
+    debugPrint("navigator is null?"+(navigator==null).toString());
+    showDialog<dynamic>(
+      context: context,
+      builder: (_) => new AlertDialog(
+          title: new Text(''),
+          content: new Text("还什么都没有添加呢..."),
+          actions:<Widget>[
+            new FlatButton(child:new Text("关闭"), onPressed: (){
+              Navigator.of(context).pop();
+
+            },),
+/*             new FlatButton(child:new Text("确定"), onPressed: (){
+              Navigator.of(context).pop();
+
+            },) */
+          ]
+      ));
+}
   Column _buildButtonColumn(Color color, IconData icon, String label) {
     return Column(
       mainAxisSize: MainAxisSize.min,

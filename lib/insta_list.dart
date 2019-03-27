@@ -51,12 +51,21 @@ class _InstaList extends State<InstaList> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.isNotEmpty
+              ?
               Flexible(
                 fit: FlexFit.loose,
                 child: new Image.file(
                   new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length -1]),
                   fit: BoxFit.cover,                  
-                ),
+                )
+              )
+              :Padding(
+                //当没有图片时候，给一个空的占位元素
+                padding: const EdgeInsets.all(0.0),
+                child:Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:<Widget>[Text('')]),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -107,12 +116,11 @@ class _InstaList extends State<InstaList> {
                     new Container(
                       height: 40.0,
                       width: 40.0,
-                      decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: new DecorationImage(
-                            fit: BoxFit.fill,
-                            image: new NetworkImage(
-                                "https://pbs.twimg.com/profile_images/916384996092448768/PF1TSFOE_400x400.jpg")),
+                      child: new Image.asset(
+                          'assets/images/avatar.jpg',
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
                       ),
                     ),
                     new SizedBox(
@@ -122,10 +130,10 @@ class _InstaList extends State<InstaList> {
                       child: new TextField(
                         decoration: new InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Add a comment...",
+                          hintText: "想说点什么...",
                         ),
                         onChanged: (text) {
-                          //print('submit $text');
+                          debugPrint('submcommentString index: $index');
                           commentStr = text;
                         },
                       ),
@@ -135,7 +143,7 @@ class _InstaList extends State<InstaList> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child:Text("1 Day Ago", style: TextStyle(color: Colors.grey)),
+                child:Text("Some Days Ago", style: TextStyle(color: Colors.grey)),
               )
             ],
           ),
@@ -152,7 +160,7 @@ class _InstaList extends State<InstaList> {
             new Padding(
               padding: new EdgeInsets.fromLTRB(0.0, 35.0, 0.0, 0.0),
               child: new Center(
-                child: new Text('还没有任何日记哦....'),
+                child: new Text('还没有任何日记哦...'),
               ),
             ),
           ],

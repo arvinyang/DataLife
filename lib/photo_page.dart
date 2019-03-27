@@ -105,7 +105,7 @@ class _MyPhotoPageState extends State<MyPhotoPageState> with LoadingDelegate {
   Future<String> readAll() async {
     //results = json.decode(await myfile.readFromLocalFile());
     //return results;
-    //print('readAll:$results');
+    //debugPrint('readAll:$results');
   // Do something with version
   }
   void _testPhotoListParams() async {

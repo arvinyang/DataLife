@@ -59,14 +59,14 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
     );
   }
   void onPageChanged(int page) {
-    print('onPageChanged is tapped!!!!!!!');
+    debugPrint('onPageChanged is tapped!!!!!!!');
     setState(() {
       this._page = page;
     });
   }
   void navigationTapped(int page) {
     //Animating Page
-    print('navigationTapped');
+    debugPrint('navigationTapped');
     pageController.jumpToPage(page);
   }
   @override
