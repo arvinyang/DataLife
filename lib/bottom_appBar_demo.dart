@@ -4,6 +4,7 @@ import 'each_view.dart';
 import 'insta_body.dart';
 import 'add_story.dart';
 import 'file_pperation.dart';
+import 'http_dio.dart';
 
 class BottomAppBarDemo extends StatefulWidget {
   @override
@@ -33,6 +34,8 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push<dynamic>(MaterialPageRoute<dynamic>(builder: (BuildContext context){
+            HttpDio httpTest = new HttpDio();
+            httpTest.postTest();
             return AddStorty('Add a New Story');
           }));
         },

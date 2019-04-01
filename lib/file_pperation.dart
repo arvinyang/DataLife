@@ -86,26 +86,35 @@ import 'package:path_provider/path_provider.dart';
   
   class NoteData 
   {
+    String postID;
     String noteID;
-    String date;
+    String datetime;
     String feeling;
     String weather;
     String temperature;
-    String place;
+    String mood;
+    double lat;
+    double lgt;
+    String location;
     List<String> imagePath = [''];
     //final List<NoteComment> noteComment;
 
-    NoteData(this.noteID, this.date, this.feeling, this.weather, this.temperature, this.place, this.imagePath);
-    //NoteData(this.noteID, this.date, this.feeling, this.weather, this.temperature, this.place, this.imagePath, this.noteComment);
+    NoteData(this.postID,this.noteID, this.datetime, this.feeling, this.weather, 
+      this.lat,this.lgt,this.temperature, this.location, this.imagePath);
+    //NoteData(this.noteID, this.datetime, this.feeling, this.weather, this.temperature, this.location, this.imagePath, this.noteComment);
 
     NoteData.fromJson(Map<String, dynamic> jsonMap)
     {
+        noteID = jsonMap['postID'];
         noteID = jsonMap['noteID'];
-        date = jsonMap['date'];
+        datetime = jsonMap['datetime'];
         feeling = jsonMap['feeling'];
         weather = jsonMap['weather'];
+        mood = jsonMap['mood'];
+        lat = jsonMap['lat'];
+        lgt = jsonMap['lgt'];
         temperature = jsonMap['temperature'];
-        place = jsonMap['place'];
+        location = jsonMap['location'];
         jsonMap['imagePath'].forEach(imagePath.add);
         //noteComment = jsonMap['noteComment'];
     }
@@ -115,12 +124,17 @@ import 'package:path_provider/path_provider.dart';
     Map<String, dynamic> toJson()
     {
       Map<String, dynamic> tmpMap = new Map<String, dynamic>();
-      tmpMap['noteID']= noteID;
-      tmpMap['date']= date;
-      tmpMap['feeling']= feeling;
-      tmpMap['weather']= weather;
-      tmpMap['temperature']= temperature;
-      tmpMap['place']= place;
+
+      tmpMap['postID'] = postID;
+      tmpMap['noteID'] = noteID;
+      tmpMap['datetime'] = datetime;
+      tmpMap['feeling'] = feeling;
+      tmpMap['weather'] = weather;
+      tmpMap['mood'] = mood;
+      tmpMap['lat'] = lat;
+      tmpMap['lgt'] = lgt;
+      tmpMap['temperature'] = temperature;
+      tmpMap['location'] = location;
       tmpMap['imagePath']= imagePath;
       return tmpMap;
     }
@@ -129,21 +143,21 @@ import 'package:path_provider/path_provider.dart';
 class NoteComment 
   {
     final String name;
-    final String date;
+    final String datetime;
     final String feeling;
 
-    NoteComment(this.name, this.date, this.feeling);
+    NoteComment(this.name, this.datetime, this.feeling);
 
     NoteComment.fromJson(Map<String, dynamic> jsonMap)
         : name = jsonMap['name'],
-          date = jsonMap['date'],
+          datetime = jsonMap['datetime'],
           feeling = jsonMap['feeling'];
 
     Map<String, dynamic> toJson()
     {
       Map<String, dynamic> tmpMap = new Map<String, dynamic>();
       tmpMap['name']= name;
-      tmpMap['date']= date;
+      tmpMap['datetime']= datetime;
       tmpMap['feeling']= feeling;
       return tmpMap;
     }
@@ -162,12 +176,12 @@ class NoteDataList
       }
         
     }
-    //NoteData(this.noteID, this.date, this.feeling, this.weather, this.temperature, this.place, this.imagePath, this.noteComment);
+    //NoteData(this.noteID, this.datetime, this.feeling, this.weather, this.temperature, this.location, this.imagePath, this.noteComment);
 
     NoteDataList.fromJson(Map<String, dynamic> jsonMap)
     {
         noteNum = jsonMap['noteNum'];
-        NoteData tmp = new NoteData('','','','','','',[]);
+        NoteData tmp = new NoteData('','','','','',0,0,'','',[]);
         for (var item in jsonMap['noteList']){
           _copyToList(item);
         }
@@ -175,7 +189,7 @@ class NoteDataList
     }
     void _copyToList(Map<String, dynamic> jsonMap)
     {
-        NoteData tmp;// = new NoteData('','','','','','',[]);
+        NoteData tmp;
         tmp = NoteData.fromJson(jsonMap);
         noteList.add(tmp);
     }      

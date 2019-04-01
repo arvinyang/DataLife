@@ -24,6 +24,7 @@ class _InstaList extends State<InstaList> {
     if(myfile==null || FileOperation.noteDataList!=null){
           myfile= new FileOperation();
     }
+    // 关键的读取文件的步骤
     new Future(()=>myfile.readFromLocalFile()).then((dynamic onValue)=>
       setState(() {
         //TODO 
