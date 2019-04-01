@@ -13,7 +13,7 @@ void main() async{
     }
     // 关键的读取文件的步骤
     myfile.readFromLocalFile().then((onValue)async{
-      dynamic rstList = await asyncFibonacci(FileOperation.noteDataList);
+      dynamic rstList = await asyncIsolateCreate(FileOperation.noteDataList);
       print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:$rstList');
     });
   debugPrint('sync OK!');

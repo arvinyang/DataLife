@@ -10,9 +10,7 @@ import 'http_dio.dart';
 
 //一个普普通通的Flutter应用的入口
 //main函数这里有async关键字，是因为创建的isolate是异步的
-
-//这里以计算斐波那契数列为例，返回的值是Future，因为是异步的
-Future<dynamic> asyncFibonacci(NoteDataList noteList) async{
+Future<dynamic> asyncIsolateCreate(NoteDataList noteList) async{
   //首先创建一个ReceivePort，为什么要创建这个？
   //因为创建isolate所需的参数，必须要有SendPort，SendPort需要ReceivePort来创建
   final response = new ReceivePort();
@@ -27,7 +25,7 @@ Future<dynamic> asyncFibonacci(NoteDataList noteList) async{
   dynamic msg = await sendReceive(sendPort, noteList);
   //sendPort.send([noteList,answer.sendPort]);
   //获得数据并返回
-  return answer.first;
+  return msg;
 }
 
 
@@ -43,12 +41,13 @@ void _isolate(SendPort initialReplyTo){
   //绑定
   initialReplyTo.send(port.sendPort);
   //监听
-  port.listen((dynamic message){
+  port.listen((dynamic message)async{
     //获取数据并解析
     final data = message[0] as NoteDataList;
     final send = message[1] as SendPort;
     //返回结果
-    send.send(executeIsolate(data));
+    dynamic tmpRst = await executeIsolate(data);
+    send.send(tmpRst);
   });
 }
 Future<NoteDataList> executeIsolate(NoteDataList noteList) async{
