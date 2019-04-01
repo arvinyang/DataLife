@@ -46,11 +46,11 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
         activeColor: Colors.orange,
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.home, color: (_page == 0) ? Colors.black : Colors.grey),
+              icon: new Icon(Icons.home, color: (_page == 0) ? Colors.lightBlue : Colors.grey),
               title: new Container(height: 0.0),
               backgroundColor: Colors.white),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.favorite, color: (_page == 1) ? Colors.black : Colors.grey),
+              icon: new Icon(Icons.favorite, color: (_page == 1) ? Colors.lightBlue : Colors.grey),
               title: new Container(height: 0.0),
               backgroundColor: Colors.white),
         ],
