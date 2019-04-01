@@ -123,7 +123,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
     String timeStr = now.toString();
     String feeling = timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + storyFeeling;
     debugPrint('selectedPhoto:$selectedPhoto');
-    NoteData newStory = new NoteData(timeStr,timeStr,feeling,' ',' ',0,0,'',' ',selectedPhoto);
+    NoteData newStory = new NoteData('',timeStr,timeStr,feeling,' ',0,0,'',' ',selectedPhoto);
     FileOperation.noteDataList.noteList.add(newStory);
     FileOperation.noteDataList.noteNum++;
     myfile.writeToLocalFile();

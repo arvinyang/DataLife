@@ -34,8 +34,6 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push<dynamic>(MaterialPageRoute<dynamic>(builder: (BuildContext context){
-            HttpDio httpTest = new HttpDio();
-            httpTest.postTest();
             return AddStorty('Add a New Story');
           }));
         },
