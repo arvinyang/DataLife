@@ -21,7 +21,22 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
 
   @override
   Widget build(BuildContext context) {
+    Widget appBarDis = new AppBar(
+      backgroundColor: new Color(0xfff8faf8),
+      centerTitle: true,
+      elevation: 1.0,
+      leading: new Icon(Icons.camera_alt, color: Colors.black,),
+      title: SizedBox(
+          height: 35.0, child: Image.asset("assets/images/insta_logo.png")),
+      actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: IconButton(icon: Icon(Icons.refresh ,color: Colors.black), onPressed: (){})
+        )
+      ],
+    );
     return new Scaffold(
+      appBar:appBarDis,
       body: new PageView(
               children: [
                 new Container(color: Colors.white, child: new InstaBody(),),
@@ -46,11 +61,11 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
         activeColor: Colors.orange,
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.home, color: (_page == 0) ? Colors.lightBlue : Colors.grey),
+              icon: new Icon(Icons.home, color: (_page == 0) ? Colors.black : Colors.grey),
               title: new Container(height: 0.0),
               backgroundColor: Colors.white),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.favorite, color: (_page == 1) ? Colors.lightBlue : Colors.grey),
+              icon: new Icon(Icons.favorite, color: (_page == 1) ? Colors.black : Colors.grey),
               title: new Container(height: 0.0),
               backgroundColor: Colors.white),
         ],
