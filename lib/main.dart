@@ -12,12 +12,13 @@ void main() async{
           myfile= new FileOperation();
     }
     // 关键的读取文件的步骤
+    AsyncIsolate asyncIsolate = AsyncIsolate();
     myfile.readFromLocalFile().then((onValue)async{
-      dynamic rstList = await asyncIsolateCreate(FileOperation.noteDataList);
-      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:$rstList');
+      await asyncIsolate.asyncIsolateInit();
+      dynamic response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
+      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:$response');
     });
   debugPrint('sync OK!');
- 
 }
 class MyApp extends StatelessWidget {
   @override
