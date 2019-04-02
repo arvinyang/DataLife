@@ -9,19 +9,25 @@ import 'file_pperation.dart';
 import 'http_dio.dart';
 
 //创建isolate必须要的参数
-void _isolate(SendPort initialReplyTo){
+void _isolate(SendPort initialReplyTo)async{
   final port = new ReceivePort();
   //绑定
   initialReplyTo.send(port.sendPort);
   //监听
-  port.listen((dynamic message)async{
-    //获取数据并解析
-    final data = message[0] as NoteDataList;
-    final send = message[1] as SendPort;
-    //返回结果
-    dynamic tmpRst = await executeIsolate(data);
-    send.send(tmpRst);
-  });
+  int cnt = 0;
+  //while(true){
+    port.listen((dynamic message)async{
+      //获取数据并解析
+      debugPrint('_isolate cnt:$cnt');
+      cnt++;
+      final data = message[0] as NoteDataList;
+      final send = message[1] as SendPort;
+      //返回结果
+      dynamic tmpRst = await executeIsolate(data);
+      send.send(tmpRst);
+    });
+  //}
+  
 }
 Future<NoteDataList> executeIsolate(NoteDataList noteList) async{
   int cnt =0;
@@ -70,8 +76,10 @@ class AsyncIsolate{
 class SyncNoteList{
   IsolateFileOperation myfile;
   NoteDataList syscNoteList;
+  String serverAddr;
   SyncNoteList(NoteDataList noteList){
     syscNoteList = noteList;
+    serverAddr = '';
   }
   Future<NoteDataList> syncAll() async{
     //等待读取文件完成
@@ -79,6 +87,13 @@ class SyncNoteList{
       if(true)
       {
         //TODO 设备发现
+        if(syscNoteList.serverAddr.isNotEmpty)
+        {
+          serverAddr = "http://" + syscNoteList.serverAddr[0] + ":5000/push_post";
+        }else{
+          serverAddr = "http://www.baidu.con" + ":5000/push_post";
+        }
+        
       }
       if(syscNoteList == null || syscNoteList.noteList.length == 0)
       {
@@ -93,7 +108,7 @@ class SyncNoteList{
     HttpDio httpTest = new HttpDio();
     for (NoteData item in syscNoteList.noteList)
     {
-      String response = await httpTest.postNoteList(item.toJson()).then(
+      String response = await httpTest.postNoteList(item.toJson(), serverAddr).then(
         (response){
           debugPrint('cnt:$cnt, response:$response');
           if(response != 'failed'){

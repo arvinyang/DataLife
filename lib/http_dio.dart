@@ -35,9 +35,10 @@ class HttpDio{
     debugPrint('postNoteList:$output');
     return response.data;
   }
-  Future<String> postNoteList(Map<String, dynamic> localInfo) async {
+  Future<String> postNoteList(Map<String, dynamic> localInfo, String srvAddr) async {
     Map<String, dynamic> tmpMap = new Map<String, dynamic>();
-    String timeStr = new DateTime.now().toString();
+    //String timeStr = new DateTime.now().toString();
+    String timeStr = localInfo['datetime'];
     String postID = md5.convert(utf8.encode(timeStr)).toString();
     tmpMap['postID'] = postID;
     tmpMap['datetime'] = localInfo['datetime'];
@@ -76,14 +77,20 @@ class HttpDio{
 
     FormData formData = new FormData.from(tmpMap);
     //Response response = await dio.post("/push_post?id=12&name=wendu");
-    Response response = await dio.post<dynamic>("http://192.168.1.65:5000/push_post",data: formData,);
-    String output = response.data;
-    debugPrint('postNoteList:$output');
-    if(response.statusCode == 200)
-    {
-      return postID;
-    }else
-    {
+    debugPrint('Sync Server:$srvAddr');
+    try{
+      Response response = await dio.post<dynamic>(srvAddr,data: formData,);
+      String output = response.data;
+      debugPrint('http response:$output');
+      if(response.statusCode == 200)
+      {
+        return postID;
+      }else
+      {
+        return 'failed';
+      }
+    }catch(err){
+      print('http post error:$err');
       return 'failed';
     }
   }

@@ -20,7 +20,7 @@ import 'package:path_provider/path_provider.dart';
     FileOperation._internal() {
     // 初始化
     //filePath = (await getApplicationDocumentsDirectory()).path;
-    noteDataList = new NoteDataList(0, []);
+    noteDataList = new NoteDataList(0, [],[]);
     //noteData = new NoteData(' ',' ',' ',' ',' ',' ',[' ']);
     //readFromLocalFileList();
     }
@@ -166,11 +166,17 @@ class NoteComment
 class NoteDataList 
   {
     int noteNum;
-    List<NoteData> noteList =new List();
+    List<String> serverAddr = new List();
+    List<NoteData> noteList = new List();
     //final List<NoteComment> noteComment;
 
-    NoteDataList(int numb ,List<NoteData> dataList){
+    NoteDataList(int numb ,List<String> srvAddr,List<NoteData> dataList){
       noteNum = numb;
+      //serverAddr = new List();
+      //noteList =new List();
+      if(srvAddr.length > 0){
+        srvAddr.every(serverAddr.add);
+      }
       if(dataList.length > 0){
         dataList.every(noteList.add);
       }
@@ -180,11 +186,18 @@ class NoteDataList
 
     NoteDataList.fromJson(Map<String, dynamic> jsonMap)
     {
-        noteNum = jsonMap['noteNum'];
-        NoteData tmp = new NoteData('','','','','',0,0,'','',[]);
-        for (var item in jsonMap['noteList']){
-          _copyToList(item);
-        }
+      noteNum = jsonMap['noteNum'];
+      if(jsonMap['serverAddr'] != null)
+      {
+        //jsonMap['serverAddr'].every(serverAddr.add);
+        serverAddr.clear();
+        serverAddr.add(jsonMap['serverAddr'][0]);
+        
+      }
+      NoteData tmp = new NoteData('','','','','',0,0,'','',[]);
+      for (var item in jsonMap['noteList']){
+        _copyToList(item);
+      }
 
     }
     void _copyToList(Map<String, dynamic> jsonMap)
@@ -199,6 +212,7 @@ class NoteDataList
     {
       Map<String, dynamic> tmpMap = new Map<String, dynamic>();
       tmpMap['noteNum']= noteNum;
+      tmpMap['serverAddr']= serverAddr;
       tmpMap['noteList']= noteList;
       return tmpMap;
     }
