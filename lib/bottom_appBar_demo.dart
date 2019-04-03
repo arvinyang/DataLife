@@ -117,10 +117,10 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
           {
             ipAddr = FileOperation.noteDataList.serverAddr[0];
           }else{
-            ipAddr = '';
+            ipAddr = '请输入IP地址';
           }
           dynamic response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
-          debugPrint('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:$response');
+          debugPrint('asyncExcute:$response');
         }
       });
     debugPrint('sync OK!');
@@ -141,7 +141,7 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
     showDialog<dynamic>(
       context: context,
       builder: (_) => new AlertDialog(
-        title: new Text(''),
+        title: new Text('同步服务器IP地址'),
         content: new TextField(
           controller: controller,
           keyboardType: TextInputType.url,
