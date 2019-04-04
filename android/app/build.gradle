@@ -27,6 +27,9 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 28
 
+    def keystorePropertiesFile = rootProject.file("key.properties")
+    def keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -39,15 +42,32 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                LOCATION_APP_KEY : "f282205e011d2fc0c7755690962aaf0a", /// 高德地图key
+        ]
     }
-
+    signingConfigs {
+    release {
+    keyAlias keystoreProperties['keyAlias']
+    keyPassword keystoreProperties['keyPassword']
+    storeFile file(keystoreProperties['storeFile'])
+    storePassword keystoreProperties['storePassword']
+    }
+    debug {
+    keyAlias keystoreProperties['keyAlias']
+    keyPassword keystoreProperties['keyPassword']
+    storeFile file(keystoreProperties['storeFile'])
+    storePassword keystoreProperties['storePassword']
+    }
     buildTypes {
-        release {
+        debug {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
     }
+    }
+    
 }
 
 flutter {

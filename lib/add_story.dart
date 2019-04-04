@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:photo/photo.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 import 'file_pperation.dart';
+import 'package:amap_location_plugin/amap_location_plugin.dart';
 
 class AddStorty extends StatefulWidget {
   String _title;
@@ -20,14 +21,43 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   String currentSelected = "";
   String photoTitle = 'my photo';
   List<String> selectedPhoto = [];
+
+  String _location = 'Unknown';
+  AmapLocation _amapLocation = AmapLocation();
+  StreamSubscription<String> _locationSubscription;
   @override
   void initState() {
     super.initState();
+    _locationSubscription = _amapLocation.onLocationChanged.listen((String location) {
+      print(location);
+      if (!mounted) return;
+      setState(() {
+        _location = location;
+      });
+    });
+    _amapLocation.startLocation;
     myfile = new FileOperation();
     setState(() {
+      //_location = location;
     });
   }
-  
+  Future<void> getLocation() async {
+    String location;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      location = await _amapLocation.getLocation;
+      print(location);
+    } catch(err) {
+      location = 'Failed to get location.';
+    }
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    if (_locationSubscription != null) {
+      _locationSubscription.cancel();
+    }
+  }
   @override
   Widget buildPreviewLoading(
     BuildContext context, AssetEntity entity, Color themeColor) {
@@ -104,6 +134,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
             : new Text("tap to add a photo..."),
           //new Text(currentSelected),
           buildTextField(),
+          new Text('Running on: $_location\n')
         ],
       ),
       floatingActionButton: new FloatingActionButton(
@@ -130,6 +161,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
     Navigator.of(context).pop();
   }
   void _showAlertDialog(BuildContext context) {
+    getLocation();
     NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
     debugPrint("navigator is null?"+(navigator==null).toString());
     showDialog<dynamic>(
