@@ -36,6 +36,15 @@ build/
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+# Android related
+location_plugin/android/**/gradle-wrapper.jar
+location_plugin/android/.gradle
+location_plugin/android/captures/
+location_plugin/android/gradlew
+location_plugin/android/gradlew.bat
+location_plugin/android/local.properties
+location_plugin/android/**/GeneratedPluginRegistrant.java
+
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
