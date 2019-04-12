@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:BOPhotoNote/insta_stories.dart';
-import 'file_pperation.dart';
 import 'dart:io';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import "package:async/src/async_memoizer.dart";
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'file_pperation.dart';
+
 
 
 class InstaList extends StatefulWidget {
@@ -53,12 +54,28 @@ class _InstaList extends State<InstaList> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.isNotEmpty
-              ?
-              Flexible(
-                fit: FlexFit.loose,
-                child: new Image.file(
-                  new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length -1]),
-                  fit: BoxFit.cover,                  
+              ?Container(
+                //fit: FlexFit.loose,
+                height: 300,
+                child: FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length==1
+                ?new Image.file(
+                  new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[0]),
+                  fit: BoxFit.scaleDown,                
+                )
+                :Swiper(
+                  itemBuilder: (BuildContext context, int swipIdx) {
+                    int itemNum = FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length;
+                    debugPrint("Swiper itemNum:$itemNum");
+                    return new Image.file(
+                      new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[swipIdx]),
+                      fit: BoxFit.cover,            
+                    );
+                  },
+                  itemCount: FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length,
+                  viewportFraction: 0.8,
+                  scale: 0.9,
+                  pagination: new SwiperPagination(),
+                  onTap: (index) => print('点击了第$index个'),
                 )
               )
               :Padding(

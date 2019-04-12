@@ -26,6 +26,7 @@ dependencies:
   flutter_spinkit: "^3.0.0"
   dio: ^2.1.0
   crypto: ^2.0.6
+  flutter_swiper: ^1.1.6
   amap_location_plugin:
     path: ./location_plugin/
 
