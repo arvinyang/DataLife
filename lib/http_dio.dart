@@ -37,20 +37,22 @@ class HttpDio{
   }
   Future<String> postNoteList(Map<String, dynamic> localInfo, String srvAddr) async {
     Map<String, dynamic> tmpMap = new Map<String, dynamic>();
+    Map<String, dynamic> sendMap = new Map<String, dynamic>();
     //String timeStr = new DateTime.now().toString();
-    String timeStr = localInfo['datetime'];
+    String timeStr = '"' + localInfo['datetime'];
     String postID = md5.convert(utf8.encode(timeStr)).toString();
-    tmpMap['postID'] = postID;
-    tmpMap['datetime'] = localInfo['datetime'];
+    tmpMap['post_id'] = postID;
+    tmpMap['datetime'] = localInfo['datetime'].substring(0, timeStr.lastIndexOf('.')-1);
     tmpMap['text'] = localInfo['feeling'];
     tmpMap['weather'] =  localInfo['weather'];
-    tmpMap['mood'] = localInfo['mood'];
-    tmpMap['lat'] = localInfo['lat'];
-    tmpMap['lgt'] = localInfo['lgt'];
-    tmpMap['tags'] = localInfo['tags'];
+    tmpMap['mood'] = localInfo['mood']==null?'':localInfo['mood'];
+    tmpMap['GPS_latitude'] = localInfo['lat'];
+    tmpMap['GPS_longitude'] = localInfo['lgt'];
+    tmpMap['tags'] = localInfo['tags']==null?['']:localInfo['tags'];;
     tmpMap['location'] = localInfo['location'];
-    //tmpMap['images'] = ['IMG_20190325_133435.jpg','IMG_20190325_133431.jpg'];
-    tmpMap["files"] = List<dynamic>();
+    tmpMap['device'] = "这部手机";
+   
+    sendMap["image"] = List<dynamic>();
     List<String> tmpFileName = [];
     for(String item in localInfo['imagePath'])
     {
@@ -59,13 +61,13 @@ class HttpDio{
         continue;
       }
       //TODO 所有类型的路径考虑完了吗？
-      String tmpStr = item.substring(item.lastIndexOf('/')+1, item.length-1);
+      String tmpStr = item.substring(item.lastIndexOf('/')+1, item.length);
       if(tmpStr.isEmpty){
         //跳过错误路径
         continue;
       }
       try{
-        tmpMap["files"].add(new UploadFileInfo(new File(item), tmpStr));
+        sendMap["image"].add(new UploadFileInfo(new File(item), tmpStr));
         tmpFileName.add(tmpStr);
       }catch(err)
       {
@@ -74,8 +76,11 @@ class HttpDio{
       tmpMap['images'] = tmpFileName;
     }
     
-
-    FormData formData = new FormData.from(tmpMap);
+    String sendStr = json.encode(tmpMap);
+    sendMap['post'] = sendStr;
+    
+    //debugPrint('sendMsg post:$sendStr');
+    FormData formData = new FormData.from(sendMap);
     //Response response = await dio.post("/push_post?id=12&name=wendu");
     debugPrint('Sync Server:$srvAddr');
     try{
