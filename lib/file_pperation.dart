@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
   
 
@@ -46,6 +47,7 @@ import 'package:path_provider/path_provider.dart';
           File file = File((await getApplicationDocumentsDirectory()).path + '/' + fileNameList);
           // read the variable as a string from the file.
           String contents = await file.readAsString();
+          debugPrint('my whole file:$contents');
           if(contents.length > 0){
             Map userMap = json.decode(contents);
             noteDataList = new NoteDataList.fromJson(userMap);
@@ -96,11 +98,13 @@ import 'package:path_provider/path_provider.dart';
     double lat;
     double lgt;
     String location;
-    List<String> imagePath = [''];
+    List<String> district = [];
+    List<String> tags = [];
+    List<String> imagePath = [];
     //final List<NoteComment> noteComment;
 
     NoteData(this.postID,this.noteID, this.datetime, this.feeling, this.weather, 
-      this.lat,this.lgt,this.temperature, this.location, this.imagePath);
+      this.lat,this.lgt,this.temperature, this.location, this.district, this.tags, this.imagePath);
     //NoteData(this.noteID, this.datetime, this.feeling, this.weather, this.temperature, this.location, this.imagePath, this.noteComment);
 
     NoteData.fromJson(Map<String, dynamic> jsonMap)
@@ -115,7 +119,14 @@ import 'package:path_provider/path_provider.dart';
         lgt = jsonMap['lgt'];
         temperature = jsonMap['temperature'];
         location = jsonMap['location'];
-        jsonMap['imagePath'].forEach(imagePath.add);
+        //clear all
+        district.clear();
+        tags.clear();
+        imagePath.clear();
+        // add 
+        jsonMap['district']==null?district=['','','']:jsonMap['district'].forEach(district.add);
+        jsonMap['tags']==null?tags=['','','']:jsonMap['tags'].forEach(district.add);
+        jsonMap['imagePath'].forEach((){imagePath.add;});
         //noteComment = jsonMap['noteComment'];
     }
           
@@ -135,6 +146,8 @@ import 'package:path_provider/path_provider.dart';
       tmpMap['lgt'] = lgt;
       tmpMap['temperature'] = temperature;
       tmpMap['location'] = location;
+      tmpMap['district'] = district;
+      tmpMap['tags'] = tags;
       tmpMap['imagePath']= imagePath;
       return tmpMap;
     }
@@ -194,7 +207,7 @@ class NoteDataList
         serverAddr.add(jsonMap['serverAddr'][0]);
         
       }
-      NoteData tmp = new NoteData('','','','','',0,0,'','',[]);
+      NoteData tmp = new NoteData('','','','','',0,0,'','',[''],[''],['']);
       for (var item in jsonMap['noteList']){
         _copyToList(item);
       }

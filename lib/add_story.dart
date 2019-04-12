@@ -1,11 +1,14 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:photo/photo.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'dart:async';
-import 'dart:io';
 import 'file_pperation.dart';
 import 'package:amap_location_plugin/amap_location_plugin.dart';
+
+
 
 class AddStorty extends StatefulWidget {
   String _title;
@@ -21,22 +24,24 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   String currentSelected = "";
   String photoTitle = 'my photo';
   List<String> selectedPhoto = [];
-
   String _location = 'Unknown';
   AmapLocation _amapLocation = AmapLocation();
   StreamSubscription<String> _locationSubscription;
   @override
   void initState() {
     super.initState();
+    myfile = new FileOperation();
     _locationSubscription = _amapLocation.onLocationChanged.listen((String location) {
       print(location);
       if (!mounted) return;
       setState(() {
         _location = location;
+        controller.text = storyFeeling;
+        dispose();
       });
     });
     _amapLocation.startLocation;
-    myfile = new FileOperation();
+    
     setState(() {
       //_location = location;
     });
@@ -86,7 +91,6 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   }
   @override
   Widget build(BuildContext context) {
-    final controller = TextEditingController();
     Widget buildTextField() {
       return TextField(
         controller: controller,
@@ -154,14 +158,25 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
     String timeStr = now.toString();
     String feeling = timeStr.substring(0, timeStr.lastIndexOf('.')) + '  ' + storyFeeling;
     debugPrint('selectedPhoto:$selectedPhoto');
-    NoteData newStory = new NoteData('',timeStr,timeStr,feeling,' ',0,0,'',' ',selectedPhoto);
+    NoteData newStory = new NoteData('',timeStr,timeStr,feeling,' ',0,0,'',' ',[''],[''],selectedPhoto);
+    if(_location != 'Unknown')
+    {
+      Map<String, dynamic> _locationMap =  json.decode(_location);
+      newStory.lat = double.parse(_locationMap['latitude']);
+      newStory.lgt = double.parse(_locationMap['longitude']);
+      newStory.location = _locationMap['address'];
+      newStory.district.clear();
+      newStory.district.add(_locationMap['province']);
+      newStory.district.add(_locationMap['city']);
+      newStory.district.add(_locationMap['district']);
+      print(_locationMap['address']);
+    }
     FileOperation.noteDataList.noteList.add(newStory);
     FileOperation.noteDataList.noteNum++;
     myfile.writeToLocalFile();
     Navigator.of(context).pop();
   }
   void _showAlertDialog(BuildContext context) {
-    getLocation();
     NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
     debugPrint("navigator is null?"+(navigator==null).toString());
     showDialog<dynamic>(
@@ -257,7 +272,6 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       }
       currentSelected = selectedPhoto.join("\n\n");
     }
-    setState(() {});
   }
   String noteGenerater(){
     String tmpStr;
