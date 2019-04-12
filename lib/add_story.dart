@@ -37,8 +37,9 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       setState(() {
         _location = location;
         controller.text = storyFeeling;
-        dispose();
       });
+      //get location once
+      _amapLocation.stopLocation;
     });
     _amapLocation.startLocation;
     
