@@ -27,15 +27,21 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
   String _location = 'Unknown';
   AmapLocation _amapLocation = AmapLocation();
   StreamSubscription<String> _locationSubscription;
+  Map<String, dynamic> _locationInfo;
   @override
   void initState() {
     super.initState();
     myfile = new FileOperation();
+    _locationInfo = null;
     _locationSubscription = _amapLocation.onLocationChanged.listen((String location) {
       print(location);
       if (!mounted) return;
       setState(() {
         _location = location;
+        if(_location != 'Unknown')
+        {
+          _locationInfo =  json.decode(_location);
+        }
         controller.text = storyFeeling;
       });
       //get location once
@@ -122,24 +128,48 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       );
     }
     return Scaffold(
-      appBar: AppBar(title: Text(widget._title),),
+      appBar: AppBar(
+        title: Text(widget._title),
+        actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: new IconButton(
+                  icon: Icon(Icons.add_a_photo),
+                  color: Colors.white,
+                  onPressed: () => _pickImage(PickType.onlyImage))
+        )
+      ],
+      ),
       body: ListView(
         children: [
-          //Icon(AssetImage("assets/images/addPhoto.jpg")),
-          new IconButton(
-                  icon: Icon(Icons.add_a_photo),
-                  color: Colors.blueAccent,
-                  onPressed: () => _pickImage(PickType.onlyImage)),
           (selectedPhoto.length > 0)
           ? Image.file(
               File(selectedPhoto[0]),
               width: 100,
               height: 100,
             )
-            : new Text("tap to add a photo..."),
+            : new Text(" "),
           //new Text(currentSelected),
           buildTextField(),
-          new Text('Running on: $_location\n')
+          new Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+             Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: <Widget>[
+                    new Icon(
+                      Icons.location_on,
+                    ),
+                    Expanded(
+                      child:Text(_locationInfo == null?'定位中...':_locationInfo['address'],
+                        style: TextStyle(fontWeight: FontWeight.normal),softWrap: true),
+                  ),
+                ]),
+             ),
+            ]),
         ],
       ),
       floatingActionButton: new FloatingActionButton(

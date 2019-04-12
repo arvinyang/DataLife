@@ -127,11 +127,10 @@ import 'package:path_provider/path_provider.dart';
         jsonMap['district']==null?district=['','','']:jsonMap['district'].forEach(district.add);
         jsonMap['tags']==null?tags=['','','']:jsonMap['tags'].forEach(district.add);
         //clean null image path
-/*         for(var item in jsonMap['imagePath']){
-          print(item);
+         for(var item in jsonMap['imagePath']){
           item == ''?null:imagePath.add(item);
-        } */
-        jsonMap['imagePath'].forEach((){imagePath.add;});
+        } 
+        //jsonMap['imagePath'].forEach((){imagePath.add;});
         //noteComment = jsonMap['noteComment'];
     }
           
