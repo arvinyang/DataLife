@@ -119,8 +119,10 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
           }else{
             ipAddr = '请输入IP地址';
           }
-          dynamic response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
-          debugPrint('asyncExcute:$response');
+          NoteDataList response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
+          FileOperation.noteDataList = response;
+          myfile.writeToLocalFile();
+          debugPrint('initState asyncExcute finished');
         }
       });
     debugPrint('sync OK!');
@@ -186,8 +188,10 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
       Navigator.of(context).pop();
     });
     if(FileOperation.noteDataList.noteNum > 0){
-      dynamic response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
-      debugPrint('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:$response');
+      NoteDataList response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
+      FileOperation.noteDataList = response;
+      myfile.writeToLocalFile();
+      debugPrint('_reSync asyncExcute finished');
     }
    }
 }

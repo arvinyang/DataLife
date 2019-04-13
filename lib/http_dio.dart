@@ -39,8 +39,14 @@ class HttpDio{
     Map<String, dynamic> tmpMap = new Map<String, dynamic>();
     Map<String, dynamic> sendMap = new Map<String, dynamic>();
     //String timeStr = new DateTime.now().toString();
+    String postID = localInfo['postID'];
+    if(postID != null && postID.length == 32)
+    {
+      debugPrint('already sync');
+      return 'failed';
+    }
     String timeStr = '"' + localInfo['datetime'];
-    String postID = md5.convert(utf8.encode(timeStr)).toString();
+    postID = md5.convert(utf8.encode(timeStr)).toString();
     tmpMap['post_id'] = postID;
     tmpMap['datetime'] = localInfo['datetime'].substring(0, timeStr.lastIndexOf('.')-1);
     tmpMap['text'] = localInfo['feeling'];
@@ -85,14 +91,13 @@ class HttpDio{
     debugPrint('Sync Server:$srvAddr');
     try{
       Response response = await dio.post<dynamic>(srvAddr,data: formData,);
-      String output = response.data;
-      debugPrint('http response:$output');
-      if(response.statusCode == 200)
-      {
-        return postID;
-      }else
-      {
+      Map<String, dynamic> _responseData =  json.decode(response.data);
+      List<dynamic> _successID =  _responseData['success'];
+      debugPrint('http response:${response.data}');
+      if(response.statusCode != 200 || _successID == null || _successID.isEmpty){
         return 'failed';
+      }else{
+        return postID;
       }
     }catch(err){
       print('http post error:$err');

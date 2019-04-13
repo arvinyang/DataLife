@@ -108,7 +108,7 @@ class _InstaList extends State<InstaList> {
                         new Icon(FontAwesomeIcons.paperPlane),
                       ],
                     ),
-                    new Icon(FontAwesomeIcons.bookmark)
+                    new Icon(Icons.check_circle,color:(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].postID.isNotEmpty) ? Colors.black : Colors.grey,)
                   ],
                 ),
               ),
