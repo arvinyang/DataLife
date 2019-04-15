@@ -109,7 +109,7 @@ import 'package:path_provider/path_provider.dart';
 
     NoteData.fromJson(Map<String, dynamic> jsonMap)
     {
-        noteID = jsonMap['postID'];
+        postID = jsonMap['postID'];
         noteID = jsonMap['noteID'];
         datetime = jsonMap['datetime'];
         feeling = jsonMap['feeling'];
