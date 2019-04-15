@@ -91,9 +91,19 @@ class HttpDio{
     debugPrint('Sync Server:$srvAddr');
     try{
       Response response = await dio.post<dynamic>(srvAddr,data: formData,);
+      debugPrint('http response:${response.data}');
       Map<String, dynamic> _responseData =  json.decode(response.data);
       List<dynamic> _successID =  _responseData['success'];
-      debugPrint('http response:${response.data}');
+      List<dynamic> _failureInfo =  _responseData['failure'];
+      // already sync, here only check the first post_id
+      for(Map item in _failureInfo){
+        String _failureID =  item['post_id'];
+        String _failureMsg =  item['message'];
+        if(_failureID.isNotEmpty && _failureMsg.contains('already exist')){
+          return _failureID;
+        }
+      }
+      // sucessfully
       if(response.statusCode != 200 || _successID == null || _successID.isEmpty){
         return 'failed';
       }else{
