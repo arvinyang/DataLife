@@ -120,11 +120,27 @@ class _InstaList extends State<InstaList> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  "Liked by pawankumar, pk and 528,331 others",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: <Widget>[
+                          new Icon(
+                            Icons.location_on,
+                          ),
+                          Expanded(
+                            child:Text(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].location.isEmpty
+                            ?'没有位置信息哟...':FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].location,
+                              style: TextStyle(fontWeight: FontWeight.w100),softWrap: true),
+                        ),
+                      ]),
+                  ),
+                  ]),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
