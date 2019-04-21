@@ -27,6 +27,7 @@ dependencies:
   dio: ^2.1.0
   crypto: ^2.0.6
   flutter_swiper: ^1.1.6
+  intl: ^0.15.8
   amap_location_plugin:
     path: ./location_plugin/
 
