@@ -157,39 +157,6 @@ class _InstaList extends State<InstaList> {
                     ]),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Container(
-                        height: 40.0,
-                        width: 40.0,
-                        child: new Image.asset(
-                            'assets/images/avatar.jpg',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                        ),
-                      ),
-                      new SizedBox(
-                        width: 10.0,
-                      ),
-                      Expanded(
-                        child: new TextField(
-                          decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "想说点什么...",
-                          ),
-                          onChanged: (text) {
-                            debugPrint('submcommentString index: $index');
-                            commentStr = text;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child:Text(timeFolding, style: TextStyle(color: Colors.grey)),
                 )
