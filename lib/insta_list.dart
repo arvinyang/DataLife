@@ -56,112 +56,116 @@ class _InstaList extends State<InstaList> {
             int rsvOrder = FileOperation.noteDataList.noteNum-index;
             NoteData noteContent = FileOperation.noteDataList.noteList[rsvOrder];
             String timeFolding =readTimestamp(noteContent.datetime);
-            return new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                noteContent.imagePath.isNotEmpty
-                ?Container(
-                  //fit: FlexFit.loose,
-                  height: 300,
-                  child: noteContent.imagePath.length==1
-                  ?new Image.file(
-                    new File(noteContent.imagePath[0]),
-                    filterQuality:FilterQuality.low ,
-                    fit: BoxFit.fitWidth, 
-                    scale: 0.1,                
+            return Card(
+              elevation: 20.0,  //设置阴影
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14.0))), 
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  noteContent.imagePath.isNotEmpty
+                  ?Container(
+                    //fit: FlexFit.loose,
+                    height: 300,
+                    child: noteContent.imagePath.length==1
+                    ?new Image.file(
+                      new File(noteContent.imagePath[0]),
+                      filterQuality:FilterQuality.low ,
+                      fit: BoxFit.fitWidth, 
+                      scale: 0.1,                
+                    )
+                    :Swiper(
+                      itemBuilder: (BuildContext context, int swipIdx) {
+                        int itemNum = noteContent.imagePath.length;
+                        debugPrint("Swiper itemNum:$itemNum");
+                        return new Image.file(
+                          File(noteContent.imagePath[swipIdx]),
+                          filterQuality:FilterQuality.low ,
+                          fit: BoxFit.fitWidth,
+                          scale: 0.1,             
+                        );
+                      },
+                      itemCount: noteContent.imagePath.length,
+                      viewportFraction: 0.8,
+                      scale: 0.9,
+                      pagination: new SwiperPagination(),
+                      onTap: (index) => print('点击了第$index个'),
+                    )
                   )
-                  :Swiper(
-                    itemBuilder: (BuildContext context, int swipIdx) {
-                      int itemNum = noteContent.imagePath.length;
-                      debugPrint("Swiper itemNum:$itemNum");
-                      return new Image.file(
-                        File(noteContent.imagePath[swipIdx]),
-                        filterQuality:FilterQuality.low ,
-                        fit: BoxFit.fitWidth,
-                        scale: 0.1,             
-                      );
-                    },
-                    itemCount: noteContent.imagePath.length,
-                    viewportFraction: 0.8,
-                    scale: 0.9,
-                    pagination: new SwiperPagination(),
-                    onTap: (index) => print('点击了第$index个'),
-                  )
-                )
-                :Padding(
-                  //当没有图片时候，给一个空的占位元素
-                  padding: const EdgeInsets.all(0.0),
-                  child:Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:<Widget>[Text('')]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          new Icon(
-                            FontAwesomeIcons.heart,
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          new Icon(
-                            FontAwesomeIcons.comment,
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          new Icon(FontAwesomeIcons.paperPlane),
-                        ],
-                      ),
-                      new Icon(Icons.check_circle,color:(noteContent.postID==null
-                      ||noteContent.postID=="") 
-                      ? Colors.grey : Colors.black,)
-                    ],
+                  :Padding(
+                    //当没有图片时候，给一个空的占位元素
+                    padding: const EdgeInsets.all(0.0),
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:<Widget>[Text('')]),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                  child: Text(
-                    noteContent.feeling,
-                    style: TextStyle(fontWeight: FontWeight.normal),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        new Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             new Icon(
-                              Icons.location_on,
+                              FontAwesomeIcons.heart,
                             ),
-                            Expanded(
-                              child:Text(noteContent.location.isEmpty
-                              ?'没有位置信息哟...':noteContent.location,
-                                style: TextStyle(fontWeight: FontWeight.w100),softWrap: true),
-                          ),
-                        ]),
+                            new SizedBox(
+                              width: 16.0,
+                            ),
+                            new Icon(
+                              FontAwesomeIcons.comment,
+                            ),
+                            new SizedBox(
+                              width: 16.0,
+                            ),
+                            new Icon(FontAwesomeIcons.paperPlane),
+                          ],
+                        ),
+                        new Icon(Icons.check_circle,color:(noteContent.postID==null
+                        ||noteContent.postID=="") 
+                        ? Colors.grey : Colors.black,)
+                      ],
                     ),
-                    ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child:Text(timeFolding, style: TextStyle(color: Colors.grey)),
-                )
-              ],
-            );
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                    child: Text(
+                      noteContent.feeling,
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: <Widget>[
+                              new Icon(
+                                Icons.location_on,
+                              ),
+                              Expanded(
+                                child:Text(noteContent.location.isEmpty
+                                ?'没有位置信息哟...':noteContent.location,
+                                  style: TextStyle(fontWeight: FontWeight.w100),softWrap: true),
+                            ),
+                          ]),
+                      ),
+                      ]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child:Text(timeFolding, style: TextStyle(color: Colors.grey)),
+                  )
+                ],
+              ),
+              );
             };
           }
         );
