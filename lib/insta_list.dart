@@ -60,7 +60,9 @@ class _InstaList extends State<InstaList> {
                 child: FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length==1
                 ?new Image.file(
                   new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[0]),
-                  fit: BoxFit.scaleDown,                
+                  filterQuality:FilterQuality.low ,
+                  fit: BoxFit.fitWidth, 
+                  scale: 0.1,                
                 )
                 :Swiper(
                   itemBuilder: (BuildContext context, int swipIdx) {
@@ -68,7 +70,9 @@ class _InstaList extends State<InstaList> {
                     debugPrint("Swiper itemNum:$itemNum");
                     return new Image.file(
                       new File(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath[swipIdx]),
-                      fit: BoxFit.cover,            
+                      filterQuality:FilterQuality.low ,
+                      fit: BoxFit.fitWidth,
+                      scale: 0.1,             
                     );
                   },
                   itemCount: FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].imagePath.length,
@@ -108,7 +112,9 @@ class _InstaList extends State<InstaList> {
                         new Icon(FontAwesomeIcons.paperPlane),
                       ],
                     ),
-                    new Icon(Icons.check_circle,color:(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].postID==null) ? Colors.grey : Colors.black,)
+                    new Icon(Icons.check_circle,color:(FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].postID==null
+                    ||FileOperation.noteDataList.noteList[FileOperation.noteDataList.noteNum-index].postID=="") 
+                    ? Colors.grey : Colors.black,)
                   ],
                 ),
               ),

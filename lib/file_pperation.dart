@@ -111,14 +111,14 @@ import 'package:path_provider/path_provider.dart';
     {
         postID = jsonMap['postID'];
         noteID = jsonMap['noteID'];
-        datetime = jsonMap['datetime'];
+        datetime = jsonMap['datetime']==null?'2019-01-01 00:00:01.00001':jsonMap['datetime'];
         feeling = jsonMap['feeling'];
         weather = jsonMap['weather'];
-        mood = jsonMap['mood'];
-        lat = jsonMap['lat'];
-        lgt = jsonMap['lgt'];
+        mood = jsonMap['mood']==null?'happy?':jsonMap['mood'];
+        lat = jsonMap['lat']==null?0.0:jsonMap['lat'];
+        lgt = jsonMap['lgt']==null?0.0:jsonMap['lgt'];
         temperature = jsonMap['temperature'];
-        location = jsonMap['location'];
+        location = jsonMap['location']==null?'未知地址':jsonMap['location'];
         //clear all
         district.clear();
         tags.clear();
