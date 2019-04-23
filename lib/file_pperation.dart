@@ -31,6 +31,7 @@ import 'package:path_provider/path_provider.dart';
     }
     Future<File> getLocalFile() async {
       // get the path to the document directory.
+      debugPrint('getLocalFile again');
       String appDocPath = (await getApplicationDocumentsDirectory()).path;
       try{
         localFile = new File('$appDocPath/$fileNameList');
@@ -73,14 +74,15 @@ import 'package:path_provider/path_provider.dart';
         }
         try{
           localFile.writeAsString(jsonStrList);
-          
+          debugPrint('Write file ok');
         }
         on FileSystemException {
-            getLocalFile();
-            //read again, write again;
+          //read again, write again;
+          Future.delayed(const Duration(seconds: 3), () => getLocalFile).then((var value){
             if(localFile != null){
               localFile.writeAsString(jsonStrList);
-            }
+            };
+          });
         }
       }
     }
