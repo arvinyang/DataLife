@@ -69,12 +69,18 @@ class _InstaList extends State<InstaList> {
                     //fit: FlexFit.loose,
                     height: 300,
                     child: noteContent.imagePath.length==1
-                    ?new Image.file(
+                    ?GestureDetector(
+                    //发生点击事件后回调
+                    onTap: () {
+                      print("hia");
+                      _showWholeImage(context,noteContent);
+                    },
+                    child:new Image.file(
                       new File(noteContent.imagePath[0]),
                       filterQuality:FilterQuality.low ,
                       fit: BoxFit.fitWidth, 
-                      scale: 0.1,                
-                    )
+                      scale: 0.1,      
+                    ))
                     :Swiper(
                       itemBuilder: (BuildContext context, int swipIdx) {
                         int itemNum = noteContent.imagePath.length;
@@ -90,7 +96,9 @@ class _InstaList extends State<InstaList> {
                       viewportFraction: 0.8,
                       scale: 0.9,
                       pagination: new SwiperPagination(),
-                      onTap: (index) => print('点击了第$index个'),
+                      onTap: (index){
+                         _showWholeImage(context,noteContent);
+                      },
                     )
                   )
                   :Padding(
@@ -228,12 +236,20 @@ class _InstaList extends State<InstaList> {
     int dealTime = DateTime.parse(timesStr).millisecondsSinceEpoch;
     var now = new DateTime.now();
     var format = new DateFormat('HH:mm a');
-    var date = new DateTime.fromMillisecondsSinceEpoch(dealTime);
-    var diff = now.difference(date);
+    var dealDate = new DateTime.fromMillisecondsSinceEpoch(dealTime);
+    var diff = now.difference(dealDate);
     var timeStr = '';
 
-    if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
-      timeStr = 'Today ' + format.format(date);
+    if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0){
+      timeStr = '1 minute ago';
+    }else if(diff.inMinutes > 0 && diff.inHours == 0){
+      timeStr = diff.inMinutes.toString() +  'minutes ago';
+    } else if(diff.inHours > 0 && diff.inDays == 0) {
+      if (diff.inDays == 1) {
+        timeStr = diff.inHours.toString() + ' hour ago';
+      } else {
+        timeStr = diff.inHours.toString() + ' hours ago';
+      } 
     } else if (diff.inDays > 0 && diff.inDays < 7) {
       if (diff.inDays == 1) {
         timeStr = diff.inDays.toString() + ' Day ago';
@@ -251,6 +267,42 @@ class _InstaList extends State<InstaList> {
 
     return timeStr;
   }
+ void _showWholeImage(BuildContext context,NoteData item) {
+    NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
+    debugPrint("navigator is null?"+(navigator==null).toString());
+    showDialog<dynamic>(
+      context: context,
+      builder: (_) => new GestureDetector(
+        onTap: () {
+        Navigator.of(context).pop();
+        },
+        child:Container(
+            child: item.imagePath.length==1
+            ?new Image.file(
+              new File(item.imagePath[0]),
+              filterQuality:FilterQuality.low ,
+              fit: BoxFit.cover, 
+              scale: 0.1,      
+            )
+            :Swiper(
+              itemBuilder: (BuildContext context, int swipIdx) {
+                return new Image.file(
+                  File(item.imagePath[swipIdx]),
+                  filterQuality:FilterQuality.low ,
+                  fit: BoxFit.cover,
+                  scale: 1.0,             
+                );
+              },
+              itemCount: item.imagePath.length,
+              viewportFraction: 1.0,
+              scale: 0.9,
+              pagination: new SwiperPagination(),
+            )
+          ),
+        ),
+    );
+}
+
 }
 
 class InstaListFavor extends StatelessWidget {
