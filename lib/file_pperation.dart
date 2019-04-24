@@ -188,6 +188,7 @@ class NoteDataList
     List<String> serverAddr = new List();
     List<NoteData> noteList = new List();
     //final List<NoteComment> noteComment;
+    
 
     NoteDataList(int numb ,List<String> srvAddr,List<NoteData> dataList){
       noteNum = numb;
@@ -201,8 +202,21 @@ class NoteDataList
       }
         
     }
+    bool updateList(List<NoteData> dataList){
+      //serverAddr = new List();
+      //noteList =new List();
+      if(noteList.isEmpty){
+        return false;
+      }
+      if(dataList.isNotEmpty){
+        dataList.every(noteList.add);
+        for(var item in dataList){
+          //TODO
+        }
+      }
+        
+    }
     //NoteData(this.noteID, this.datetime, this.feeling, this.weather, this.temperature, this.location, this.imagePath, this.noteComment);
-
     NoteDataList.fromJson(Map<String, dynamic> jsonMap)
     {
       noteNum = jsonMap['noteNum'];

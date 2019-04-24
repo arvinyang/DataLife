@@ -120,7 +120,12 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
             ipAddr = '请输入IP地址';
           }
           NoteDataList response = await AsyncIsolate.asyncExcute(AsyncIsolate.sendPort, FileOperation.noteDataList);
-          FileOperation.noteDataList = response;
+          //update the postID and write to file
+          int index = 0;
+          for(var item in response.noteList){
+            FileOperation.noteDataList.noteList[index].postID =item.postID;
+            index++;
+          }
           myfile.writeToLocalFile();
           debugPrint('initState asyncExcute finished');
         }
