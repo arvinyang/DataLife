@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:photo/photo.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'file_pperation.dart';
 import 'package:amap_location_plugin/amap_location_plugin.dart';
 
@@ -174,7 +175,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
                 ),
                 child: FlatButton(
                   child: new Icon(Icons.more_horiz,size: 50,),
-                  onPressed: () {},
+                  onPressed: () {_showWholeImage(context);},
               )),
           ]);
     }
@@ -225,6 +226,41 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       ),
     );
   }
+  void _showWholeImage(BuildContext context) {
+    NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
+    debugPrint("navigator is null?"+(navigator==null).toString());
+    showDialog<dynamic>(
+      context: context,
+      builder: (_) => new GestureDetector(
+        onTap: () {
+        Navigator.of(context).pop();
+        },
+        child:Container(
+            child: selectedPhoto.length==1
+            ?new Image.file(
+              new File(selectedPhoto[0]),
+              filterQuality:FilterQuality.low ,
+              fit: BoxFit.cover, 
+              scale: 0.1,      
+            )
+            :Swiper(
+              itemBuilder: (BuildContext context, int swipIdx) {
+                return new Image.file(
+                  File(selectedPhoto[swipIdx]),
+                  filterQuality:FilterQuality.low ,
+                  fit: BoxFit.cover,
+                  scale: 1.0,             
+                );
+              },
+              itemCount: selectedPhoto.length,
+              viewportFraction: 1.0,
+              scale: 0.9,
+              pagination: new SwiperPagination(),
+            )
+          ),
+        ),
+    );
+  } 
   void _saveStory()
   {
     if(selectedPhoto.isEmpty && storyFeeling.isEmpty){
