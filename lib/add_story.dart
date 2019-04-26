@@ -127,6 +127,57 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
           )),
       );
     }
+    Widget buildImgView() {
+       return Row(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 8.0,
+                  ),
+                ),
+                child: Image.file(
+                File(selectedPhoto[0]),
+                width: 100,
+                height: 100,
+                fit:BoxFit.cover
+              )),
+              selectedPhoto.length>1?Container(
+                alignment: Alignment.center,
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 5.0,
+                  ),
+                ),
+                child: Image.file(
+                File(selectedPhoto[1]),
+                width: 100,
+                height: 100,
+                fit:BoxFit.cover
+              )):null,
+              Container(
+                alignment: Alignment.center,
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 5.0,
+                  ),
+                ),
+                child: FlatButton(
+                  child: new Icon(Icons.more_horiz,size: 50,),
+                  onPressed: () {},
+              )),
+          ]);
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -143,12 +194,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       body: ListView(
         children: [
           (selectedPhoto.length > 0)
-          ? Image.file(
-              File(selectedPhoto[0]),
-              width: 100,
-              height: 100,
-            )
-            : new Text(" "),
+          ?buildImgView(): new Text(" "),
           //new Text(currentSelected),
           buildTextField(),
           new Column(
