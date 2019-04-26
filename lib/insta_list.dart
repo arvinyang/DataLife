@@ -277,25 +277,33 @@ class _InstaList extends State<InstaList> {
         Navigator.of(context).pop();
         },
         child:Container(
+          alignment: Alignment.center,
+          //width: ,
+          //height: 300,
+          decoration: BoxDecoration(
+            color: Colors.black87,
+          ),
             child: item.imagePath.length==1
             ?new Image.file(
               new File(item.imagePath[0]),
+              gaplessPlayback:false,
               filterQuality:FilterQuality.low ,
-              fit: BoxFit.cover, 
-              scale: 0.1,      
+              fit: BoxFit.contain, 
+              scale: 1.0,      
             )
             :Swiper(
               itemBuilder: (BuildContext context, int swipIdx) {
                 return new Image.file(
                   File(item.imagePath[swipIdx]),
+                  gaplessPlayback:false,
                   filterQuality:FilterQuality.low ,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   scale: 1.0,             
                 );
               },
               itemCount: item.imagePath.length,
               viewportFraction: 1.0,
-              scale: 0.9,
+              scale: 0.6,
               pagination: new SwiperPagination(),
             )
           ),
