@@ -33,7 +33,7 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
           child: IconButton(icon: Icon(Icons.settings ,color: Colors.black), onPressed: (){_showAlertDialog(context);})
         )),
       title: SizedBox(
-          height: 35.0, child: Image.asset("assets/images/insta_logo.png")),
+          height: 35.0, child: Image.asset("assets/images/vie.png")),
       actions: <Widget>[
         Padding(
           padding: const EdgeInsets.only(right: 12.0),
