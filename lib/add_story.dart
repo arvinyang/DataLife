@@ -129,7 +129,8 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
       );
     }
     Widget buildImgView() {
-       return Row(
+      if(selectedPhoto.length>1){
+        return Row(
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
@@ -147,7 +148,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
                 height: 100,
                 fit:BoxFit.cover
               )),
-              selectedPhoto.length>1?Container(
+              Container(
                 alignment: Alignment.center,
                 width: 120,
                 height: 120,
@@ -162,7 +163,7 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
                 width: 100,
                 height: 100,
                 fit:BoxFit.cover
-              )):null,
+              )),
               Container(
                 alignment: Alignment.center,
                 width: 120,
@@ -178,6 +179,42 @@ class _AddStorty extends State<AddStorty> with LoadingDelegate {
                   onPressed: () {_showWholeImage(context);},
               )),
           ]);
+      }else{
+        return Row(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 8.0,
+                  ),
+                ),
+                child: Image.file(
+                File(selectedPhoto[0]),
+                width: 100,
+                height: 100,
+                fit:BoxFit.cover
+              )),
+              Container(
+                alignment: Alignment.center,
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 5.0,
+                  ),
+                ),
+                child: FlatButton(
+                  child: new Icon(Icons.more_horiz,size: 50,),
+                  onPressed: () {_showWholeImage(context);},
+              )),
+          ]);
+      }
+       
     }
     return Scaffold(
       appBar: AppBar(
