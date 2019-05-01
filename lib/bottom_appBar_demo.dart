@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'each_view.dart';
 import 'insta_body.dart';
 import 'add_story.dart';
 import 'file_pperation.dart';
@@ -12,7 +11,6 @@ class BottomAppBarDemo extends StatefulWidget {
 }
 PageController pageController;
 class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
-  List<Widget> _eachView;
   int _page = 0;
   int _index = 0;
   bool triedSilentLogin = false;
@@ -79,7 +77,7 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
               title: new Container(height: 0.0),
               backgroundColor: Colors.white),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.favorite, color: (_page == 1) ? Colors.black : Colors.grey),
+              icon: new Icon(Icons.timeline, color: (_page == 1) ? Colors.black : Colors.grey),
               title: new Container(height: 0.0),
               backgroundColor: Colors.white),
         ],
@@ -131,8 +129,6 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
         }
       });
     debugPrint('sync OK!');
-    _eachView = List();
-    _eachView..add(EachView('home'))..add(EachView('me'));
     pageController = new PageController();
   }
 
