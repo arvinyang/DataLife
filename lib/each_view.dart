@@ -94,7 +94,7 @@ class _EachViewState extends State<EachView> {
     );
     return Scaffold(
       appBar: AppBar(title: Text(widget._title),),
-      body: new MyPhotoPageState('my photo'),
+      body: null,//new MyPhotoPageState('my photo'),
       /* body: ListView(
         children: [
           Image.asset(

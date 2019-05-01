@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:intl/intl.dart';
 import 'file_pperation.dart';
+import 'photo_page.dart';
 
 
 
@@ -73,7 +74,10 @@ class _InstaList extends State<InstaList> {
                     //发生点击事件后回调
                     onTap: () {
                       print("hia");
-                      _showWholeImage(context,noteContent);
+                      //_showWholeImage(context,noteContent);
+                      Navigator.of(context).push<dynamic>(MaterialPageRoute<dynamic>(builder: (BuildContext context){
+                          return MyPhotoPageState(noteContent);
+                        }));
                     },
                     child:new Image.file(
                       new File(noteContent.imagePath[0]),
@@ -97,7 +101,10 @@ class _InstaList extends State<InstaList> {
                       scale: 0.9,
                       pagination: new SwiperPagination(),
                       onTap: (index){
-                         _showWholeImage(context,noteContent);
+                         //_showWholeImage(context,noteContent);
+                         Navigator.of(context).push<dynamic>(MaterialPageRoute<dynamic>(builder: (BuildContext context){
+                          return MyPhotoPageState(noteContent);
+                        }));
                       },
                     )
                   )
@@ -267,50 +274,6 @@ class _InstaList extends State<InstaList> {
 
     return timeStr;
   }
- void _showWholeImage(BuildContext context,NoteData item) {
-    NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
-    debugPrint("navigator is null?"+(navigator==null).toString());
-    showDialog<dynamic>(
-      context: context,
-      builder: (_) => new GestureDetector(
-        onTap: () {
-        Navigator.of(context).pop();
-        },
-        child:Container(
-          alignment: Alignment.center,
-          //width: ,
-          //height: 300,
-          decoration: BoxDecoration(
-            color: Colors.black87,
-          ),
-            child: item.imagePath.length==1
-            ?new Image.file(
-              new File(item.imagePath[0]),
-              gaplessPlayback:false,
-              filterQuality:FilterQuality.low ,
-              fit: BoxFit.contain, 
-              scale: 1.0,      
-            )
-            :Swiper(
-              itemBuilder: (BuildContext context, int swipIdx) {
-                return new Image.file(
-                  File(item.imagePath[swipIdx]),
-                  gaplessPlayback:false,
-                  filterQuality:FilterQuality.low ,
-                  fit: BoxFit.contain,
-                  scale: 1.0,             
-                );
-              },
-              itemCount: item.imagePath.length,
-              viewportFraction: 1.0,
-              scale: 0.6,
-              pagination: new SwiperPagination(),
-            )
-          ),
-        ),
-    );
-}
-
 }
 
 class InstaListFavor extends StatelessWidget {
