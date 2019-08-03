@@ -4,6 +4,7 @@ import 'insta_body.dart';
 import 'add_story.dart';
 import 'file_pperation.dart';
 import 'isolate_sync.dart';
+import 'life_story.dart';
 
 class BottomAppBarDemo extends StatefulWidget {
   @override
@@ -52,7 +53,7 @@ class _BottomAppBarDemoState extends State<BottomAppBarDemo> {
       body: new PageView(
               children: [
                 new Container(color: Colors.white, child: new InstaBody(),),
-                new Container(color: Colors.white, child: new InstaBodyFavor()),
+                new Container(color: Colors.white, child: new InstaBodyLife()),
               ],
               controller: pageController,
               physics: new NeverScrollableScrollPhysics(),
